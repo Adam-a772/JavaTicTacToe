@@ -3,13 +3,13 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 
-public class BoardTest {
-    Board board;
+public class TicTacToeBoardTest {
+    TicTacToeBoard board;
     int[][] boardState;
 
     @Before
     public void initialize() {
-        board = new Board();
+        board = new TicTacToeBoard();
         boardState = new int[][]{{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}};
     }
 

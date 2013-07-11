@@ -1,9 +1,9 @@
 import java.util.Arrays;
 
-public class Board {
+public class TicTacToeBoard implements TwoDimensionalGameBoard {
     private int[][] state;
 
-    public Board() {
+    public TicTacToeBoard() {
         state = new int[3][3];
         for (int i = 0; i < state.length; i++) {
             Arrays.fill(state[i], -1);
