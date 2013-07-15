@@ -1,7 +1,8 @@
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class TicTacToeBoardTest {
     TicTacToeBoard board;
@@ -158,5 +159,112 @@ public class TicTacToeBoardTest {
         board.makeMove(0, 2, 0);
         board.makeMove(2, 0, 1);
         assertArrayEquals(new int[]{0, -1, 1}, board.getBackwardDiagonal());
+    }
+
+    @Test
+    public void defaultArrayDoesNotHaveWinner() {
+        assertFalse(TicTacToeBoard.hasWinner(new int[]{-1, -1, -1}));
+    }
+
+    @Test
+    public void arrayStartingWithNegOneDoesNotHaveWinner() {
+        assertFalse(TicTacToeBoard.hasWinner(new int[]{-1, 0, 0}));
+    }
+
+    @Test
+    public void arrayEndingWithNegOneDoesNotHaveWinner() {
+        assertFalse(TicTacToeBoard.hasWinner(new int[]{1, 1, -1}));
+    }
+
+    @Test
+    public void arrayWithZerosAndOnesDoesNotHaveWinner() {
+        assertFalse(TicTacToeBoard.hasWinner(new int[]{1, 1, 0}));
+    }
+
+    @Test
+    public void arrayOfOnesIsWinner() {
+        assertTrue(TicTacToeBoard.hasWinner(new int[]{1, 1, 1}));
+    }
+
+    @Test
+    public void arrayOfZerosIsWinner() {
+        assertTrue(TicTacToeBoard.hasWinner(new int[]{0, 0, 0}));
+    }
+
+    @Test
+    public void initiallyBoardHasNoWinner() {
+        assertEquals(-1, board.winner());
+    }
+
+    @Test
+    public void boardWithFirstRowZerosHasWinner() {
+        board.setState(new int[][]{{0, 0, 0}, {-1, -1, -1}, {-1, -1, -1}});
+        assertEquals(0, board.winner());
+    }
+
+    @Test
+    public void boardWithTwoOnesHasNoWinner() {
+        board.setState(new int[][]{{-1, 1, 1}, {-1, -1, -1}, {-1, -1, -1}});
+        assertEquals(-1, board.winner());
+    }
+
+    @Test
+    public void boardWithFirstColumnZerosHasWinner() {
+        board.setState(new int[][]{{0, -1, -1}, {0, -1, -1}, {0, -1, -1}});
+        assertEquals(0, board.winner());
+    }
+
+    @Test
+    public void boardWithSecondColumnZerosHasWinner() {
+        board.setState(new int[][]{{-1, 0, -1}, {-1, 0, -1}, {-1, 0, -1}});
+        assertEquals(0, board.winner());
+    }
+
+    @Test
+    public void boardWithSecondRowZerosHasWinner() {
+        board.setState(new int[][]{{-1, -1, -1}, {0, 0, 0}, {-1, -1, -1}});
+        assertEquals(0, board.winner());
+    }
+
+    @Test
+    public void boardWithThirdColumnOnesHasWinner() {
+        board.setState(new int[][]{{-1, -1, 1}, {-1, -1, 1}, {-1, -1, 1}});
+        assertEquals(1, board.winner());
+    }
+
+    @Test
+    public void boardWithThirdRowOnesHasWinner() {
+        board.setState(new int[][]{{-1, -1, -1}, {-1, -1, -1}, {1, 1, 1}});
+        assertEquals(1, board.winner());
+    }
+
+    @Test
+    public void boardWithForwardDiagonalOnesHasWinner() {
+        board.setState(new int[][]{{-1, -1, 1}, {-1, 1, -1}, {1, -1, -1}});
+        assertEquals(1, board.winner());
+    }
+
+    @Test
+    public void boardWithForwardDiagonalZerosHasWinner() {
+        board.setState(new int[][]{{-1, -1, 0}, {-1, 0, -1}, {0, -1, -1}});
+        assertEquals(0, board.winner());
+    }
+
+    @Test
+    public void boardWithBackwardDiagonalOnesHasWinner() {
+        board.setState(new int[][]{{1, -1, -1}, {-1, 1, -1}, {-1, -1, 1}});
+        assertEquals(1, board.winner());
+    }
+
+    @Test
+    public void boardWithBackwardDiagonalZerosHasWinner() {
+        board.setState(new int[][]{{0, -1, -1}, {-1, 0, -1}, {-1, -1, 0}});
+        assertEquals(0, board.winner());
+    }
+
+    @Test
+    public void boardTieHasNoWinner() {
+        board.setState(new int[][]{{0, 0, 1}, {1, 1, 0}, {0, 1, 0}});
+        assertEquals(-1, board.winner());
     }
 }

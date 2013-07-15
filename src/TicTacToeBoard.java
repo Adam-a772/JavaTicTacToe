@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class TicTacToeBoard implements TwoDimensionalGameBoard {
+public class TicTacToeBoard {
     private int[][] state;
 
     public TicTacToeBoard() {
@@ -12,6 +12,11 @@ public class TicTacToeBoard implements TwoDimensionalGameBoard {
 
     public int[][] getState() {
         return state;
+    }
+
+
+    public void setState(int[][] newState) {
+        state = newState;
     }
 
     public void makeMove(int row, int col, int player) {
@@ -44,5 +49,31 @@ public class TicTacToeBoard implements TwoDimensionalGameBoard {
             diag[i] = state[i][diag.length - 1 - i];
         }
         return diag;
+    }
+
+    public static boolean hasWinner(int[] row) {
+        int firstElem = row[0];
+        if (firstElem == -1) {
+            return false;
+        }
+        for (int i = 1; i < row.length; i++) {
+            if (row[i] != firstElem) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int winner() {
+        for (int i = 0; i < getRow(0).length; i++) {
+            if (hasWinner(getRow(i)) || hasWinner(getColumn(i))) {
+                return getState()[i][i];
+            }
+        }
+        if (hasWinner(getForwardDiagonal()) || hasWinner(getBackwardDiagonal())) {
+            return getState()[1][1];
+        } else {
+            return -1;
+        }
     }
 }
