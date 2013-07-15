@@ -1,32 +1,20 @@
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.Scanner;
+import java.io.*;
 
 public class HumanPlayerIO {
-    private PrintStream outputStream;
-    private InputStream inputStream;
-    private Scanner inputScanner;
+    private PrintWriter outputStream;
+    private BufferedReader inputStream;
 
-    public HumanPlayerIO(InputStream inputStream, PrintStream outputStream) {
-        this.outputStream = outputStream;
-        this.inputStream = inputStream;
-        inputScanner = new Scanner(inputStream);
-    }
-
-    public PrintStream getOutputStream() {
-        return outputStream;
-    }
-
-    public InputStream getInputStream() {
-        return inputStream;
+    public HumanPlayerIO(Reader reader, Writer writer) {
+        inputStream = new BufferedReader(reader);
+        outputStream = new PrintWriter(writer, true);
     }
 
     public void askForMove() {
         outputStream.println("Where would you like to move? (enter the cell number):");
     }
 
-    public String readMove() {
-        return inputScanner.nextLine();
+    public String readMove() throws IOException {
+        return inputStream.readLine();
     }
 
     public void notifyInvalidCell() {
