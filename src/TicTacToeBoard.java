@@ -1,12 +1,14 @@
 import java.util.Arrays;
 
 public class TicTacToeBoard {
+    private int size;
     private int[][] state;
 
-    public TicTacToeBoard() {
-        state = new int[3][3];
-        for (int i = 0; i < state.length; i++) {
-            Arrays.fill(state[i], -1);
+    public TicTacToeBoard(int size) {
+        state = new int[size][size];
+        this.size = size;
+        for (int[] aState : state) {
+            Arrays.fill(aState, -1);
         }
     }
 
@@ -28,35 +30,35 @@ public class TicTacToeBoard {
     }
 
     public int[] getColumn(int col) {
-        int[] column = new int[3];
-        for (int i = 0; i < column.length; i++) {
+        int[] column = new int[size];
+        for (int i = 0; i < size; i++) {
             column[i] = state[i][col];
         }
         return column;
     }
 
     public int[] getForwardDiagonal() {
-        int[] diag = new int[3];
-        for (int i = 0; i < diag.length; i++) {
+        int[] diag = new int[size];
+        for (int i = 0; i < size; i++) {
             diag[i] = state[i][i];
         }
         return diag;
     }
 
     public int[] getBackwardDiagonal() {
-        int[] diag = new int[3];
-        for (int i = 0; i < diag.length; i++) {
-            diag[i] = state[i][diag.length - 1 - i];
+        int[] diag = new int[size];
+        for (int i = 0; i < size; i++) {
+            diag[i] = state[i][size - 1 - i];
         }
         return diag;
     }
 
-    public static boolean hasWinner(int[] row) {
+    public boolean hasWinner(int[] row) {
         int firstElem = row[0];
         if (firstElem == -1) {
             return false;
         }
-        for (int i = 1; i < row.length; i++) {
+        for (int i = 1; i < size; i++) {
             if (row[i] != firstElem) {
                 return false;
             }
@@ -65,13 +67,15 @@ public class TicTacToeBoard {
     }
 
     public int winner() {
-        for (int i = 0; i < getRow(0).length; i++) {
+        for (int i = 0; i < size; i++) {
             if (hasWinner(getRow(i)) || hasWinner(getColumn(i))) {
                 return getState()[i][i];
             }
         }
-        if (hasWinner(getForwardDiagonal()) || hasWinner(getBackwardDiagonal())) {
-            return getState()[1][1];
+        if (hasWinner(getForwardDiagonal())) {
+            return getState()[0][0];
+        } else if (hasWinner(getBackwardDiagonal())) {
+            return getState()[0][size - 1];
         } else {
             return -1;
         }
