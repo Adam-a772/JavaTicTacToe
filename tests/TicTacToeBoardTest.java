@@ -12,9 +12,9 @@ public class TicTacToeBoardTest {
 
     @Before
     public void initialize() {
-        board = new TicTacToeBoard(3);
+        board = new TicTacToeBoard(3, 2);
         boardState = new int[][]{{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}};
-        board4 = new TicTacToeBoard(4);
+        board4 = new TicTacToeBoard(4, 2);
         boardState4 = new int[][]{{-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}};
     }
 

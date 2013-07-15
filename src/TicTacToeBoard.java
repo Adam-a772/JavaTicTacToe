@@ -1,11 +1,12 @@
 import java.util.Arrays;
 
 public class TicTacToeBoard {
-    private int size;
+    private int size, dimensions;
     private int[][] state;
 
-    public TicTacToeBoard(int size) {
+    public TicTacToeBoard(int size, int dimensions) {
         state = new int[size][size];
+        this.dimensions = dimensions;
         this.size = size;
         for (int[] aState : state) {
             Arrays.fill(aState, -1);
