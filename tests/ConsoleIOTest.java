@@ -1,4 +1,3 @@
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -6,8 +5,8 @@ import java.io.*;
 
 import static org.junit.Assert.assertTrue;
 
-public class HumanPlayerIOTest {
-    HumanPlayerIO playerIO;
+public class ConsoleIOTest {
+    ConsoleIO playerIO;
     StringWriter playerWriter;
 
     @Before
@@ -18,7 +17,7 @@ public class HumanPlayerIOTest {
     public void initialize(String inputForPlayerIO) {
         Reader reader = new StringReader(inputForPlayerIO);
         playerWriter = new StringWriter();
-        playerIO = new HumanPlayerIO(reader, playerWriter);
+        playerIO = new ConsoleIO(reader, playerWriter);
     }
 
     @Test

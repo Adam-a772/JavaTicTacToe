@@ -1,10 +1,10 @@
 import java.io.*;
 
-public class HumanPlayerIO {
+public class ConsoleIO {
     private PrintWriter outputStream;
     private BufferedReader inputStream;
 
-    public HumanPlayerIO(Reader reader, Writer writer) {
+    public ConsoleIO(Reader reader, Writer writer) {
         inputStream = new BufferedReader(reader);
         outputStream = new PrintWriter(writer, true);
     }
