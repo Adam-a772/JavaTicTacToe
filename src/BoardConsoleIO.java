@@ -1,7 +1,7 @@
 import java.io.PrintWriter;
 import java.io.Writer;
 
-public class BoardConsoleIO {
+public class BoardConsoleIO implements BoardIO {
     private PrintWriter outputStream;
     private String horizontalDash;
     private String verticalDash;
@@ -28,6 +28,7 @@ public class BoardConsoleIO {
         this.oh = oh;
     }
 
+    @Override
     public void printBoard(int[][] boardState, String zeroSymbol, String oneSymbol) {
         int size = boardState.length;
         String horizontalDivider = constructHorizontalDivider(size);
