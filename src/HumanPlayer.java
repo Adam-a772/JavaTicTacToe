@@ -31,7 +31,12 @@ public class HumanPlayer implements Player {
         } else {
             int row = cell / boardState.length;
             int col = cell % boardState.length;
-            return new int[]{row, col};
+            if(boardState[row][col] == -1){
+                return new int[]{row, col};
+            } else {
+                io.notifyInvalidCell();
+                return getMove(boardState);
+            }
         }
     }
 }

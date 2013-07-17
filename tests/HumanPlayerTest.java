@@ -87,4 +87,18 @@ public class HumanPlayerTest {
         assertTrue(reader.nextLine().trim().matches(".*not valid.*"));
         assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
     }
+
+    @Test
+    public void shouldNotifyAndRepromptIfTakenCellIsGiven(){
+        initialize("0\n1\n2\n3\n");
+        assertArrayEquals(new int[]{1, 0}, player.getMove(new int[][]{{0, 1, 0}, {-1, -1, -1}, {-1, -1, -1}}));
+        Scanner reader = new Scanner(new StringReader(playerWriter.toString()));
+        assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
+        assertTrue(reader.nextLine().trim().matches(".*not valid.*"));
+        assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
+        assertTrue(reader.nextLine().trim().matches(".*not valid.*"));
+        assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
+        assertTrue(reader.nextLine().trim().matches(".*not valid.*"));
+        assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
+    }
 }
