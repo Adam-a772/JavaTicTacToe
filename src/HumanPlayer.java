@@ -15,7 +15,7 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public int[] getMove(int[][] boardState) throws IOException {
+    public int[] getMove(int[][] boardState) {
         io.askForMove();
         String cell_str = io.readMove();
         int cell;

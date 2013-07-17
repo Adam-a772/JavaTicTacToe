@@ -22,7 +22,7 @@ public class Game {
         return turn;
     }
 
-    public void takeTurn() throws IOException {
+    public void takeTurn() {
         players[turn % players.length].getMove(board.getState());
         ++turn;
     }

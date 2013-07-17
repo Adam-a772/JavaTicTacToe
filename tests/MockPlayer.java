@@ -19,7 +19,7 @@ public class MockPlayer implements Player {
         nextMove = move;
     }
     @Override
-    public int[] getMove(int[][] boardState) throws IOException {
+    public int[] getMove(int[][] boardState) {
         ++timesGetMove;
         return nextMove;
     }

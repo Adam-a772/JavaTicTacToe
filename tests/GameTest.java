@@ -27,7 +27,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldAdvanceTurnEachTurn() throws IOException {
+    public void shouldAdvanceTurnEachTurn() {
         assertEquals(0, game.getTurn());
         game.takeTurn();
         assertEquals(1, game.getTurn());
@@ -38,7 +38,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldGetMoveFromPlayer0OnTurn0() throws IOException {
+    public void shouldGetMoveFromPlayer0OnTurn0() {
         game.takeTurn();
         assertEquals(1, player0.getTimesGetMove());
         assertEquals(0, player1.getTimesGetMove());
@@ -46,7 +46,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldGetMoveFromPlayer1OnTurn1() throws IOException {
+    public void shouldGetMoveFromPlayer1OnTurn1() {
         game.takeTurn();
         game.takeTurn();
         assertEquals(1, player0.getTimesGetMove());
@@ -54,7 +54,7 @@ public class GameTest {
     }
 
     @Test
-    public void shouldGetMoveFromCorrectPlayerEachTurn() throws IOException {
+    public void shouldGetMoveFromCorrectPlayerEachTurn() {
         for(int i = 0; i < 9; i++){
             game.takeTurn();
         }

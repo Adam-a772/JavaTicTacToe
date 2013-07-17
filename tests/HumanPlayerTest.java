@@ -2,9 +2,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Scanner;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -38,53 +38,53 @@ public class HumanPlayerTest {
     }
 
     @Test
-    public void shouldGetMove() throws IOException {
+    public void shouldGetMove() {
         assertArrayEquals(new int[]{0, 0}, player.getMove(new int[][]{{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}));
     }
 
     @Test
-    public void shouldGetMoveFromInput() throws IOException {
+    public void shouldGetMoveFromInput() {
         initialize("8");
         assertArrayEquals(new int[]{2, 2}, player.getMove(new int[][]{{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}));
     }
 
     @Test
-    public void shouldAskForMoveWhenGettingMove() throws IOException {
+    public void shouldAskForMoveWhenGettingMove() {
         player.getMove(new int[][]{{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}});
         assertTrue(playerWriter.toString().trim().matches(".*Where.*move.*cell number.*"));
     }
 
     @Test
-    public void shouldNotifyAndRepromptIfBadResponseIsGiven() throws IOException {
+    public void shouldNotifyAndRepromptIfBadResponseIsGiven() {
         initialize("bad\n3stillbad\n5");
         assertArrayEquals(new int[]{1, 2}, player.getMove(new int[][]{{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}));
-        BufferedReader reader = new BufferedReader(new StringReader(playerWriter.toString()));
-        assertTrue(reader.readLine().trim().matches(".*Where.*move.*cell number.*"));
-        assertTrue(reader.readLine().trim().matches(".*not valid.*"));
-        assertTrue(reader.readLine().trim().matches(".*Where.*move.*cell number.*"));
-        assertTrue(reader.readLine().trim().matches(".*not valid.*"));
-        assertTrue(reader.readLine().trim().matches(".*Where.*move.*cell number.*"));
+        Scanner reader = new Scanner(new StringReader(playerWriter.toString()));
+        assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
+        assertTrue(reader.nextLine().trim().matches(".*not valid.*"));
+        assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
+        assertTrue(reader.nextLine().trim().matches(".*not valid.*"));
+        assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
     }
 
     @Test
-    public void shouldNotifyAndRepromptIfNegativeResponseIsGiven() throws IOException {
+    public void shouldNotifyAndRepromptIfNegativeResponseIsGiven() {
         initialize("-1\n3\n");
         assertArrayEquals(new int[]{1, 0}, player.getMove(new int[][]{{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}));
-        BufferedReader reader = new BufferedReader(new StringReader(playerWriter.toString()));
-        assertTrue(reader.readLine().trim().matches(".*Where.*move.*cell number.*"));
-        assertTrue(reader.readLine().trim().matches(".*not valid.*"));
-        assertTrue(reader.readLine().trim().matches(".*Where.*move.*cell number.*"));
+        Scanner reader = new Scanner(new StringReader(playerWriter.toString()));
+        assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
+        assertTrue(reader.nextLine().trim().matches(".*not valid.*"));
+        assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
     }
 
     @Test
-    public void shouldNotifyAndRepromptIfTooLargeResponseIsGiven() throws IOException {
+    public void shouldNotifyAndRepromptIfTooLargeResponseIsGiven() {
         initialize("9\n12\n8\n");
         assertArrayEquals(new int[]{2, 2}, player.getMove(new int[][]{{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}));
-        BufferedReader reader = new BufferedReader(new StringReader(playerWriter.toString()));
-        assertTrue(reader.readLine().trim().matches(".*Where.*move.*cell number.*"));
-        assertTrue(reader.readLine().trim().matches(".*not valid.*"));
-        assertTrue(reader.readLine().trim().matches(".*Where.*move.*cell number.*"));
-        assertTrue(reader.readLine().trim().matches(".*not valid.*"));
-        assertTrue(reader.readLine().trim().matches(".*Where.*move.*cell number.*"));
+        Scanner reader = new Scanner(new StringReader(playerWriter.toString()));
+        assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
+        assertTrue(reader.nextLine().trim().matches(".*not valid.*"));
+        assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
+        assertTrue(reader.nextLine().trim().matches(".*not valid.*"));
+        assertTrue(reader.nextLine().trim().matches(".*Where.*move.*cell number.*"));
     }
 }
