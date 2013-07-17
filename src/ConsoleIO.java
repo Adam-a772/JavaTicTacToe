@@ -1,11 +1,12 @@
 import java.io.*;
+import java.util.Scanner;
 
 public class ConsoleIO {
     private PrintWriter outputStream;
-    private BufferedReader inputStream;
+    private Scanner inputStream;
 
-    public ConsoleIO(Reader reader, Writer writer) {
-        inputStream = new BufferedReader(reader);
+    public ConsoleIO(Readable reader, Writer writer) {
+        inputStream = new Scanner(reader);
         outputStream = new PrintWriter(writer, true);
     }
 
@@ -13,8 +14,8 @@ public class ConsoleIO {
         outputStream.println("Where would you like to move? (enter the cell number):");
     }
 
-    public String readMove() throws IOException {
-        return inputStream.readLine();
+    public String readMove() {
+        return inputStream.nextLine();
     }
 
     public void notifyInvalidCell() {
