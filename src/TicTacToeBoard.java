@@ -14,7 +14,7 @@ public class TicTacToeBoard {
     }
 
     public TicTacToeBoard(){
-        new TicTacToeBoard(3, 2);
+        this(3, 2);
     }
 
     public int[][] getState() {
