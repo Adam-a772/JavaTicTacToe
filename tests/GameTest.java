@@ -9,16 +9,14 @@ import static org.junit.Assert.assertEquals;
 
 public class GameTest {
     private Game game;
-    private StringWriter outputStream;
     private MockPlayer player0, player1;
 
     @Before
     public void initialize(){
-        outputStream = new StringWriter();
         player0 = new MockPlayer("X");
         player1 = new MockPlayer("O");
         Player[] players = new Player[]{player0, player1};
-        game = new Game(new StringReader(""), outputStream, players, new TicTacToeBoard());
+        game = new Game(players, new TicTacToeBoard());
     }
 
     @Test
