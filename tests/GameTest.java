@@ -129,6 +129,18 @@ public class GameTest {
     }
 
     @Test
+    public void shouldTake16TurnsInA4x4Game(){
+        Player[] players = new Player[]{player0, player1};
+        boardIO = new MockBoardIO();
+        board = new TicTacToeBoard(4, 2);
+        game = new Game(players, board, boardIO);
+
+        game.play();
+        assertEquals(8, player0.getTimesGetMove());
+        assertEquals(8, player1.getTimesGetMove());
+    }
+
+    @Test
     public void shouldReturnWinner(){
         assertEquals(-1, game.play());
     }

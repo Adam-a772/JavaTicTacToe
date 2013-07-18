@@ -25,7 +25,8 @@ public class Game {
     }
 
     public int play() {
-        for(int i = 0; i < 9; i++){
+        int size = board.getRow(0).length;
+        for(int i = 0; i < size * size; i++){
             int winner = takeTurn();
             if (winner > -1){
                 return winner;
