@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.TreeMap;
 
 public class AIPlayer implements Player{
     private TicTacToeBoard board;
@@ -17,38 +18,39 @@ public class AIPlayer implements Player{
     @Override
     public int[] getMove(int[][] boardState) {
         int currentPlayer = currentPlayer(boardState);
-        int[] winningMove = getWinningMove(boardState, currentPlayer);
-        if(winningMove[0] >= 0 && winningMove[1] >= 0){
-            return winningMove;
-        }
-        for(int i = 0; i < boardState.length; i++){
-            if(boardState[i][i] == -1){
-                return new int[]{i, i};
-            }
-        }
-        for(int row = 0; row < boardState.length; row++){
-            for(int col = 0; col < boardState.length; col++){
-                if(boardState[row][col] == -1){
-                    return new int[]{row, col};
-                }
-            }
-        }
-        return null;
+        int[] result = getMove(boardState, currentPlayer, currentPlayer);
+        return new int[]{result[0], result[1]};
     }
 
-    private int[] getWinningMove(int[][] boardState, int currentPlayer) {
+    private int[] getMove(int[][] boardState, int currentPlayer, int movePlayer) {
+        TreeMap<Integer, int[]> possibleMoves = new TreeMap<Integer, int[]>();
         for(int row = 0; row < boardState.length; row++){
             for(int col = 0; col < boardState.length; col++){
                 if(boardState[row][col] == -1){
-                    board.setState(deep2DArrayCopy(boardState));
-                    board.makeMove(row, col, currentPlayer);
-                    if(board.winner() == currentPlayer){
-                        return new int[]{row, col};
+                    int[][] boardStateCopy = deep2DArrayCopy(boardState);
+                    board.setState(boardStateCopy);
+                    board.makeMove(row, col, movePlayer);
+                    int outcome = board.winner();
+                    if(outcome == 3){//tie
+                        return new int[]{row, col, 0};
+                    } else if(outcome == movePlayer){//a player wins
+                        if(movePlayer == currentPlayer){//AIPlayer wins
+                            return new int[]{row, col, 1};
+                        } else {//other player wins
+                            return new int[]{row, col, -1};
+                        }
                     }
+                    int nextPlayer = (movePlayer == 0) ? 1 : 0;
+                    outcome = getMove(boardStateCopy, currentPlayer, nextPlayer)[2];
+                    possibleMoves.put(outcome, new int[]{row, col, outcome});
                 }
             }
         }
-        return new int[]{-1, -1};
+        if(currentPlayer == movePlayer){//want highest outcome
+            return possibleMoves.get(possibleMoves.lastKey());
+        } else {//want lowest outcome (highest outcome for other player)
+            return possibleMoves.get(possibleMoves.firstKey());
+        }
     }
 
     public static int[][] deep2DArrayCopy(int[][] intArr){

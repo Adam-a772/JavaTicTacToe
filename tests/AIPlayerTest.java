@@ -3,9 +3,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.*;
 
 public class AIPlayerTest {
     AIPlayer player;
@@ -25,8 +23,11 @@ public class AIPlayerTest {
     }
 
     @Test
-    public void shouldChooseCell0WhenBoardEmpty(){
-        assertArrayEquals(new int[]{0, 0}, player.getMove(new int[][]{{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}));
+    public void shouldChooseCornerCellWhenBoardEmpty(){
+        int[] move = player.getMove(new int[][]{{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}});
+        int[][] corners = new int[][]{{0, 0}, {0, 2}, {2, 0}, {2, 2}};
+        assertTrue(Arrays.equals(move, corners[0]) || Arrays.equals(move, corners[1]) ||
+                   Arrays.equals(move, corners[2]) || Arrays.equals(move, corners[3]));
     }
 
     @Test
@@ -73,6 +74,14 @@ public class AIPlayerTest {
         assertArrayEquals(new int[]{2, 2}, player.getMove(new int[][]{{0, -1, 1}, {0, 0, 1}, {1, -1, -1}}));
         assertArrayEquals(new int[]{0, 2}, player.getMove(new int[][]{{1, 1, -1}, {-1, 0, -1}, {0, 0, 1}}));
         assertArrayEquals(new int[]{2, 0}, player.getMove(new int[][]{{1, 0, 0}, {-1, 0, -1}, {-1, 1, 1}}));
+        assertArrayEquals(new int[]{1, 0}, player.getMove(new int[][]{{0, 1, 1}, {-1, 0, -1}, {0, -1, 1}}));
+    }
 
+    @Test
+    public void shouldChooseMoveToForceTie(){
+        assertArrayEquals(new int[]{2, 1}, player.getMove(new int[][]{{0, 1, 0}, {-1, 0, -1}, {1, -1, 1}}));
+        assertArrayEquals(new int[]{2, 0}, player.getMove(new int[][]{{0, -1, -1}, {0, 1, 1}, {-1, -1, 0}}));
+        assertArrayEquals(new int[]{2, 0}, player.getMove(new int[][]{{0, 0, 1}, {-1, 1, -1}, {-1, -1, -1}}));
+        assertFalse(Arrays.equals(new int[]{0, 1}, player.getMove(new int[][]{{-1, -1, 0}, {-1, 1, -1}, {1, 0, -1}})));
     }
 }
