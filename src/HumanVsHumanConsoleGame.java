@@ -8,10 +8,10 @@ public class HumanVsHumanConsoleGame {
         Player player1 = new HumanPlayer("O", playerIO);
         Game game = new Game(new Player[]{player0, player1}, new TicTacToeBoard(), new BoardConsoleIO(new PrintWriter(System.out)));
         int winner = game.play();
-        if(winner > -1){
-            System.out.println("Player " + winner + " won!");
-        } else {
+        if(winner == 3){
             System.out.println("It was a tie.");
+        } else {
+            System.out.println("Player " + winner + " won!");
         }
     }
 }

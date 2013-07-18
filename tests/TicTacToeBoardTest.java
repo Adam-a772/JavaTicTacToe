@@ -269,7 +269,7 @@ public class TicTacToeBoardTest {
     @Test
     public void boardTieHasNoWinner() {
         board.setState(new int[][]{{0, 0, 1}, {1, 1, 0}, {0, 1, 0}});
-        assertEquals(-1, board.winner());
+        assertEquals(3, board.winner());
     }
 
     // 4x4 tests
@@ -451,5 +451,18 @@ public class TicTacToeBoardTest {
     public void _4x4boardWithBackwardDiagonalOnesHasWinner() {
         board.setState(new int[][]{{1, -1, -1, -1}, {-1, 1, -1, -1}, {-1, -1, 1, -1}, {-1, -1, -1, 1}});
         assertEquals(1, board.winner());
+    }
+
+    @Test
+    public void shouldNotHaveFullBoard(){
+        assertFalse(board.full());
+        board.setState(new int[][]{{0, 1, 0}, {-1, 1, 1}, {1, 0, 0}});
+        assertFalse(board.full());
+    }
+
+    @Test
+    public void shouldHaveFullBoard(){
+        board.setState(new int[][]{{0, 1, 0}, {0, 1, 1}, {1, 0, 0}});
+        assertTrue(board.full());
     }
 }

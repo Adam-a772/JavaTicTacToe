@@ -81,8 +81,21 @@ public class TicTacToeBoard {
             return getState()[0][0];
         } else if (hasWinner(getBackwardDiagonal())) {
             return getState()[0][size - 1];
+        } else if (full()){
+            return 3;
         } else {
             return -1;
         }
+    }
+
+    public boolean full() {
+        for(int row = 0; row < size; row++){
+            for(int col = 0; col < size; col++){
+                if(state[row][col] == -1){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
