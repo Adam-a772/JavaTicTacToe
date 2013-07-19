@@ -1,3 +1,7 @@
+package TicTacToe;
+
+import TicTacToe.BoardIO;
+
 public class MockBoardIO implements BoardIO {
     private int timesPrintedBoard;
 
@@ -6,7 +10,7 @@ public class MockBoardIO implements BoardIO {
     }
 
     @Override
-    public void printBoard(int[][] boardState, String zeroSymbol, String oneSymbol) {
+    public void printBoard(BoardMarker[][] boardState, BoardMarker zeroSymbol, BoardMarker oneSymbol) {
         ++timesPrintedBoard;
     }
 

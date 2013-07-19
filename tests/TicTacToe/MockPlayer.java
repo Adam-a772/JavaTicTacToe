@@ -1,17 +1,19 @@
-import java.io.IOException;
+package TicTacToe;
+
+import TicTacToe.Player;
 
 public class MockPlayer implements Player {
     private int[] nextMove;
-    private String symbol;
+    private BoardMarker symbol;
     private int timesGetMove;
 
-    public MockPlayer(String sym){
+    public MockPlayer(BoardMarker sym){
         symbol = sym;
         timesGetMove = 0;
         nextMove = new int[]{0, 0};
     }
     @Override
-    public String getSymbol() {
+    public BoardMarker getSymbol() {
         return symbol;
     }
 
@@ -19,7 +21,7 @@ public class MockPlayer implements Player {
         nextMove = move;
     }
     @Override
-    public int[] getMove(int[][] boardState) {
+    public int[] getMove(BoardMarker[][] boardState) {
         ++timesGetMove;
         return nextMove;
     }

@@ -1,6 +1,9 @@
+package TicTacToe;
+
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import static TicTacToe.BoardMarker.*;
 
 public class ConsoleGame {
     public static void main(String[] args) {
@@ -25,30 +28,30 @@ public class ConsoleGame {
         }
 
         if(playAI && playFirst){
-            player0 = new HumanPlayer((playAsX ? "X" : "O"), playerIO);
-            player1 = new AIPlayer((playAsX ? "O" : "X"), new TicTacToeBoard());
+            player0 = new HumanPlayer((playAsX ? X : O), playerIO);
+            player1 = new AIPlayer((playAsX ? O : X), new TicTacToeBoard());
         } else if(playAI){
-            player0 = new AIPlayer((playAsX ? "O" : "X"), new TicTacToeBoard());
-            player1 = new HumanPlayer((playAsX ? "X" : "O"), playerIO);
+            player0 = new AIPlayer((playAsX ? O : X), new TicTacToeBoard());
+            player1 = new HumanPlayer((playAsX ? X : O), playerIO);
         } else {
-            player0 = new HumanPlayer((playAsX ? "X" : "O"), playerIO);
-            player1 = new HumanPlayer((playAsX ? "O" : "X"), playerIO);
+            player0 = new HumanPlayer((playAsX ? X : O), playerIO);
+            player1 = new HumanPlayer((playAsX ? O : X), playerIO);
         }
 
         Player[] players = new Player[]{player0, player1};
         Game game = new Game(players, new TicTacToeBoard(), new BoardConsoleIO(outputStream));
 
-        int winner = game.play();
-        if(winner == 3){
+        BoardMarker winner = game.play();
+        if(winner == T){
             outputStream.println("It was a tie.");
         } else if(playAI) {
-            if((playFirst && winner == 0) || (!playFirst && winner == 1)) {
+            if((playAsX && winner == X) || (!playAsX && winner == O)) {
                 outputStream.println("You won!");
             } else {
                 outputStream.println("You lost!");
             }
         } else {
-            outputStream.println("Player with " + players[winner].getSymbol() + "s won!");
+            outputStream.println("TicTacToe.Player with " + (winner == X ? "X" : "O") + "s won!");
         }
     }
 }

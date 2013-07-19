@@ -1,21 +1,21 @@
-import java.io.IOException;
+package TicTacToe;
 
 public class HumanPlayer implements Player {
-    private String symbol;
+    private BoardMarker symbol;
     private ConsoleIO io;
 
-    public HumanPlayer(String symbol, ConsoleIO consoleIO) {
+    public HumanPlayer(BoardMarker symbol, ConsoleIO consoleIO) {
         this.symbol = symbol;
         this.io = consoleIO;
     }
 
     @Override
-    public String getSymbol() {
+    public BoardMarker getSymbol() {
         return symbol;
     }
 
     @Override
-    public int[] getMove(int[][] boardState) {
+    public int[] getMove(BoardMarker[][] boardState) {
         io.askForMove();
         String cell_str = io.readMove();
         int cell;
@@ -31,7 +31,7 @@ public class HumanPlayer implements Player {
         } else {
             int row = cell / boardState.length;
             int col = cell % boardState.length;
-            if(boardState[row][col] == -1){
+            if(boardState[row][col] == BoardMarker._){
                 return new int[]{row, col};
             } else {
                 io.notifyInvalidCell();

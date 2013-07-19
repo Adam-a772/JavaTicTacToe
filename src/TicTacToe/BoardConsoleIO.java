@@ -1,5 +1,8 @@
+package TicTacToe;
+
 import java.io.PrintWriter;
 import java.io.Writer;
+import static TicTacToe.BoardMarker.*;
 
 public class BoardConsoleIO implements BoardIO {
     private PrintWriter outputStream;
@@ -29,14 +32,14 @@ public class BoardConsoleIO implements BoardIO {
     }
 
     @Override
-    public void printBoard(int[][] boardState, String zeroSymbol, String oneSymbol) {
+    public void printBoard(BoardMarker[][] boardState, BoardMarker zeroSymbol, BoardMarker oneSymbol) {
         int size = boardState.length;
         String horizontalDivider = constructHorizontalDivider(size);
         for (int row = 0; row < size; row++) {
             if (row > 0) {
                 outputStream.println(horizontalDivider);
             }
-            printRow(boardState[row], row, new String[]{zeroSymbol, oneSymbol});
+            printRow(boardState[row], row, new BoardMarker[]{zeroSymbol, oneSymbol});
         }
     }
 
@@ -51,7 +54,7 @@ public class BoardConsoleIO implements BoardIO {
         return horizontalDivider;
     }
 
-    public void printRow(int[] row, int rowNumber, String[] playerSymbols) {
+    public void printRow(BoardMarker[] row, int rowNumber, BoardMarker[] playerSymbols) {
         String[][] playerTemplates = constructPlayerTemplates(playerSymbols);
         String[] rowStrings = new String[]{"", "", ""};
         int size = row.length;
@@ -59,9 +62,9 @@ public class BoardConsoleIO implements BoardIO {
             if (column > 0) {
                 addDividerToCell(rowStrings);
             }
-            if (row[column] >= 0) {
-                int player = row[column];
-                String[] playerSymbol = playerTemplates[player];
+            if (row[column] != _) {
+                int playerIndex = (row[column] == playerSymbols[0] ? 0 : 1);
+                String[] playerSymbol = playerTemplates[playerIndex];
                 addPlayerCellToRowStrings(rowStrings, playerSymbol);
             } else {
                 String cellNum = Integer.toString(rowNumber * size + column);
@@ -95,10 +98,10 @@ public class BoardConsoleIO implements BoardIO {
         }
     }
 
-    private String[][] constructPlayerTemplates(String[] playerSymbols) {
+    private String[][] constructPlayerTemplates(BoardMarker[] playerSymbols) {
         String[][] playerTemplates = new String[2][];
         for(int i = 0; i < playerSymbols.length; i++){
-            if (playerSymbols[i].equals("X")) {
+            if (playerSymbols[i] == X) {
                 playerTemplates[i] = ex;
             } else {
                 playerTemplates[i] = oh;

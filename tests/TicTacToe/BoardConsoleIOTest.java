@@ -1,3 +1,7 @@
+package TicTacToe;
+
+import TicTacToe.BoardConsoleIO;
+import static TicTacToe.BoardMarker.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +27,7 @@ public class BoardConsoleIOTest {
         String emptyRow = "   |   |   \n" +
                           "   |   |   \n" +
                           "  0|  1|  2\n";
-        io.printRow(new int[]{-1, -1, -1}, 0, new String[]{"X", "O"});
+        io.printRow(new BoardMarker[]{_, _, _}, 0, new BoardMarker[]{X, O});
         assertEquals(emptyRow, ioOutput.toString());
     }
 
@@ -32,7 +36,7 @@ public class BoardConsoleIOTest {
         String emptyRow = "   |   |   \n" +
                           "   |   |   \n" +
                           "  3|  4|  5\n";
-        io.printRow(new int[]{-1, -1, -1}, 1, new String[]{"X", "O"});
+        io.printRow(new BoardMarker[]{_, _, _}, 1, new BoardMarker[]{X, O});
         assertEquals(emptyRow, ioOutput.toString());
     }
 
@@ -41,7 +45,7 @@ public class BoardConsoleIOTest {
         String emptyRow = "   |   |   \n" +
                           "   |   |   \n" +
                           "  6|  7|  8\n";
-        io.printRow(new int[]{-1, -1, -1}, 2, new String[]{"X", "O"});
+        io.printRow(new BoardMarker[]{_, _, _}, 2, new BoardMarker[]{X, O});
         assertEquals(emptyRow, ioOutput.toString());
     }
 
@@ -50,7 +54,7 @@ public class BoardConsoleIOTest {
         String emptyRow = "   |   |   |   \n" +
                           "   |   |   |   \n" +
                           "  0|  1|  2|  3\n";
-        io.printRow(new int[]{-1, -1, -1, -1}, 0, new String[]{"X", "O"});
+        io.printRow(new BoardMarker[]{_, _, _, _}, 0, new BoardMarker[]{X, O});
         assertEquals(emptyRow, ioOutput.toString());
     }
 
@@ -59,7 +63,7 @@ public class BoardConsoleIOTest {
         String emptyRow = "   |   |   |   \n" +
                           "   |   |   |   \n" +
                           " 12| 13| 14| 15\n";
-        io.printRow(new int[]{-1, -1, -1, -1}, 3, new String[]{"X", "O"});
+        io.printRow(new BoardMarker[]{_, _, _, _}, 3, new BoardMarker[]{X, O});
         assertEquals(emptyRow, ioOutput.toString());
     }
 
@@ -76,7 +80,7 @@ public class BoardConsoleIOTest {
                             "   |   |   \n" +
                             "   |   |   \n" +
                             "  6|  7|  8\n";
-        io.printBoard(new int[][]{{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}, "X", "O");
+        io.printBoard(new BoardMarker[][]{{_, _, _}, {_, _, _}, {_, _, _}}, X, O);
         assertEquals(emptyBoard, ioOutput.toString());
     }
 
@@ -97,7 +101,7 @@ public class BoardConsoleIOTest {
                             "   |   |   |   \n" +
                             "   |   |   |   \n" +
                             " 12| 13| 14| 15\n";
-        io.printBoard(new int[][]{{-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}}, "X", "O");
+        io.printBoard(new BoardMarker[][]{{_, _, _, _}, {_, _, _, _}, {_, _, _, _}, {_, _, _, _}}, X, O);
         assertEquals(emptyBoard, ioOutput.toString());
     }
 
@@ -106,7 +110,7 @@ public class BoardConsoleIOTest {
         String row = "\\ /|   |   \n" +
                      " x |   |   \n" +
                      "/ \\|  1|  2\n";
-        io.printRow(new int[]{0, -1, -1}, 0, new String[]{"X", "O"});
+        io.printRow(new BoardMarker[]{X, _, _}, 0, new BoardMarker[]{X, O});
         assertEquals(row, ioOutput.toString());
     }
 
@@ -115,7 +119,7 @@ public class BoardConsoleIOTest {
         String row = "/-\\|   |   \n" +
                      "| ||   |   \n" +
                      "\\-/|  1|  2\n";
-        io.printRow(new int[]{0, -1, -1}, 0, new String[]{"O", "X"});
+        io.printRow(new BoardMarker[]{O, _, _}, 0, new BoardMarker[]{O, X});
         assertEquals(row, ioOutput.toString());
     }
 
@@ -124,7 +128,7 @@ public class BoardConsoleIOTest {
         String row = "/-\\|   |   \n" +
                      "| ||   |   \n" +
                      "\\-/|  1|  2\n";
-        io.printRow(new int[]{1, -1, -1}, 0, new String[]{"X", "O"});
+        io.printRow(new BoardMarker[]{O, _, _}, 0, new BoardMarker[]{X, O});
         assertEquals(row, ioOutput.toString());
     }
 
@@ -145,7 +149,7 @@ public class BoardConsoleIOTest {
                        "/-\\|\\ /|\\ /|/-\\\n" +
                        "| || x | x || |\n" +
                        "\\-/|/ \\|/ \\|\\-/\n";
-        io.printBoard(new int[][]{{0, 1, 1, 1}, {0, 0, 1, 1}, {0, 0, 1, 0}, {1, 0, 0, 1}}, "X", "O");
+        io.printBoard(new BoardMarker[][]{{X, O, O, O}, {X, X, O, O}, {X, X, O, X}, {O, X, X, O}}, X, O);
         assertEquals(board, ioOutput.toString());
     }
 }

@@ -1,5 +1,8 @@
+package TicTacToe;
+
 import org.junit.Before;
 import org.junit.Test;
+import static TicTacToe.BoardMarker.*;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -12,8 +15,8 @@ public class GameTest {
 
     @Before
     public void initialize(){
-        player0 = new MockPlayer("X");
-        player1 = new MockPlayer("O");
+        player0 = new MockPlayer(X);
+        player1 = new MockPlayer(O);
         Player[] players = new Player[]{player0, player1};
         boardIO = new MockBoardIO();
         board = new TicTacToeBoard();
@@ -72,53 +75,53 @@ public class GameTest {
 
     @Test
     public void shouldUpdateBoardWithMoves(){
-        assertArrayEquals(new int[][]{{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}, board.getState());
+        assertArrayEquals(new BoardMarker[][]{{_, _, _}, {_, _, _}, {_, _, _}}, board.getState());
         player0.setNextMove(new int[]{0, 0});
         game.takeTurn();
-        assertArrayEquals(new int[][]{{0, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}, board.getState());
+        assertArrayEquals(new BoardMarker[][]{{X, _, _}, {_, _, _}, {_, _, _}}, board.getState());
         player1.setNextMove(new int[]{1, 1});
         game.takeTurn();
-        assertArrayEquals(new int[][]{{0, -1, -1}, {-1, 1, -1}, {-1, -1, -1}}, board.getState());
+        assertArrayEquals(new BoardMarker[][]{{X, _, _}, {_, O, _}, {_, _, _}}, board.getState());
         player0.setNextMove(new int[]{2, 0});
         game.takeTurn();
-        assertArrayEquals(new int[][]{{0, -1, -1}, {-1, 1, -1}, {0, -1, -1}}, board.getState());
+        assertArrayEquals(new BoardMarker[][]{{X, _, _}, {_, O, _}, {X, _, _}}, board.getState());
         player1.setNextMove(new int[]{1, 0});
         game.takeTurn();
-        assertArrayEquals(new int[][]{{0, -1, -1}, {1, 1, -1}, {0, -1, -1}}, board.getState());
+        assertArrayEquals(new BoardMarker[][]{{X, _, _}, {O, O, _}, {X, _, _}}, board.getState());
     }
 
     @Test
     public void shouldReturnWinnerAfterEachTurn(){
         player0.setNextMove(new int[]{0, 0});
-        assertEquals(-1, game.takeTurn());
+        assertEquals(_, game.takeTurn());
         player1.setNextMove(new int[]{0, 1});
-        assertEquals(-1, game.takeTurn());
+        assertEquals(_, game.takeTurn());
         player0.setNextMove(new int[]{1, 1});
-        assertEquals(-1, game.takeTurn());
+        assertEquals(_, game.takeTurn());
         player1.setNextMove(new int[]{2, 2});
-        assertEquals(-1, game.takeTurn());
+        assertEquals(_, game.takeTurn());
         player0.setNextMove(new int[]{2, 0});
-        assertEquals(-1, game.takeTurn());
+        assertEquals(_, game.takeTurn());
         player1.setNextMove(new int[]{0, 2});
-        assertEquals(-1, game.takeTurn());
+        assertEquals(_, game.takeTurn());
         player0.setNextMove(new int[]{1, 0});
-        assertEquals(0, game.takeTurn());
+        assertEquals(X, game.takeTurn());
     }
 
     @Test
     public void shouldReturnWinnerAfterEachTurnIfPlayer2(){
         player0.setNextMove(new int[]{0, 0});
-        assertEquals(-1, game.takeTurn());
+        assertEquals(_, game.takeTurn());
         player1.setNextMove(new int[]{1, 1});
-        assertEquals(-1, game.takeTurn());
+        assertEquals(_, game.takeTurn());
         player0.setNextMove(new int[]{0, 1});
-        assertEquals(-1, game.takeTurn());
+        assertEquals(_, game.takeTurn());
         player1.setNextMove(new int[]{0, 2});
-        assertEquals(-1, game.takeTurn());
+        assertEquals(_, game.takeTurn());
         player0.setNextMove(new int[]{1, 0});
-        assertEquals(-1, game.takeTurn());
+        assertEquals(_, game.takeTurn());
         player1.setNextMove(new int[]{2, 0});
-        assertEquals(1, game.takeTurn());
+        assertEquals(O, game.takeTurn());
     }
 
     @Test
@@ -142,20 +145,20 @@ public class GameTest {
 
     @Test
     public void shouldReturnWinner(){
-        assertEquals(-1, game.play());
+        assertEquals(_, game.play());
     }
 
     @Test
     public void shouldReturnWinnerEarlyIfAPlayerWins(){
-        board.setState(new int[][]{{-1, -1, -1}, {0, 1, -1}, {0, 1, -1}});
-        assertEquals(0, game.play());
+        board.setState(new BoardMarker[][]{{_, _, _}, {X, O, _}, {X, O, _}});
+        assertEquals(X, game.play());
     }
 
     @Test
     public void shouldReturnWinnerEarlyIfAPlayer2Wins(){
         player0.setNextMove(new int[]{0, 2});
         player1.setNextMove(new int[]{0, 1});
-        board.setState(new int[][]{{-1, -1, -1}, {0, 1, -1}, {0, 1, -1}});
-        assertEquals(1, game.play());
+        board.setState(new BoardMarker[][]{{_, _, _}, {X, O, _}, {X, O, _}});
+        assertEquals(O, game.play());
     }
 }

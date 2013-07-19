@@ -1,3 +1,7 @@
+package TicTacToe;
+
+import static TicTacToe.BoardMarker.*;
+
 public class Game {
     private Player[] players;
     private TicTacToeBoard board;
@@ -15,23 +19,23 @@ public class Game {
         return turn;
     }
 
-    public int takeTurn() {
+    public BoardMarker takeTurn() {
         boardIO.printBoard(board.getState(), players[0].getSymbol(), players[1].getSymbol());
         int currentPlayer = turn % players.length;
         int[] move = players[currentPlayer].getMove(board.getState());
-        board.makeMove(move[0], move[1], currentPlayer);
+        board.makeMove(move[0], move[1], players[currentPlayer].getSymbol());
         ++turn;
         return board.winner();
     }
 
-    public int play() {
+    public BoardMarker play() {
         int size = board.getRow(0).length;
         for(int i = 0; i < size * size; i++){
-            int winner = takeTurn();
-            if (winner > -1){
+            BoardMarker winner = takeTurn();
+            if (winner != _){
                 return winner;
             }
         }
-        return -1;
+        return _;
     }
 }
