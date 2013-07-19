@@ -20,12 +20,11 @@ public class AIPlayer implements Player{
 
     @Override
     public int[] getMove(BoardMarker[][] boardState) {
-        BoardMarker currentPlayer = currentPlayer(boardState);
-        int[] result = getMove(boardState, currentPlayer, currentPlayer);
+        int[] result = getMove(boardState, symbol);
         return new int[]{result[0], result[1]};
     }
 
-    private int[] getMove(BoardMarker[][] boardState, BoardMarker currentPlayer, BoardMarker movePlayer) {
+    private int[] getMove(BoardMarker[][] boardState, BoardMarker movePlayer) {
         TreeMap<Integer, int[]> possibleMoves = new TreeMap<Integer, int[]>();
         for(int row = 0; row < boardState.length; row++){
             for(int col = 0; col < boardState.length; col++){
@@ -37,19 +36,19 @@ public class AIPlayer implements Player{
                     if(outcome == T){//tie
                         return new int[]{row, col, 0};
                     } else if(outcome == movePlayer){//a player wins
-                        if(movePlayer == currentPlayer){//TicTacToe.AIPlayer wins
+                        if(movePlayer == symbol){//TicTacToe.AIPlayer wins
                             return new int[]{row, col, 1};
                         } else {//other player wins
                             return new int[]{row, col, -1};
                         }
                     }
                     BoardMarker nextPlayer = (movePlayer == X) ? O : X;
-                    int outcomeScore = getMove(boardStateCopy, currentPlayer, nextPlayer)[2];
+                    int outcomeScore = getMove(boardStateCopy, nextPlayer)[2];
                     possibleMoves.put(outcomeScore, new int[]{row, col, outcomeScore});
                 }
             }
         }
-        if(currentPlayer == movePlayer){//want highest outcome
+        if(movePlayer == symbol){//want highest outcome
             return possibleMoves.get(possibleMoves.lastKey());
         } else {//want lowest outcome (highest outcome for other player)
             return possibleMoves.get(possibleMoves.firstKey());
@@ -62,23 +61,5 @@ public class AIPlayer implements Player{
             copy[i] = Arrays.copyOf(arr[i], arr[i].length);
         }
         return copy;
-    }
-
-    public BoardMarker currentPlayer(BoardMarker[][] boardState) {
-        int[] counts = new int[]{0, 0};
-        for(int row = 0; row < boardState.length; row++){
-            for(int col = 0; col < boardState.length; col++){
-                if(boardState[row][col] == X){
-                    ++counts[0];
-                } else if(boardState[row][col] == O){
-                    ++counts[1];
-                }
-            }
-        }
-        if(counts[0] > counts[1]){
-            return O;
-        } else {
-            return X;
-        }
     }
 }

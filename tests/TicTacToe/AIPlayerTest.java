@@ -37,6 +37,7 @@ public class AIPlayerTest {
 
     @Test
     public void shouldChooseCell4WhenOnlyCell0Taken(){
+        player = new AIPlayer(O, board);
         assertArrayEquals(new int[]{1, 1}, player.getMove(new BoardMarker[][]{{X, _, _}, {_, _, _}, {_, _, _}}));
     }
 
@@ -53,20 +54,6 @@ public class AIPlayerTest {
     }
 
     @Test
-    public void shouldBeAbleToDetermineWhoseTurnItIs(){
-        assertEquals(X, player.currentPlayer(new BoardMarker[][]{{_, _, _}, {_, _, _}, {_, _, _}}));
-        assertEquals(O, player.currentPlayer(new BoardMarker[][]{{X, _, _}, {_, _, _}, {_, _, _}}));
-        assertEquals(X, player.currentPlayer(new BoardMarker[][]{{X, _, _}, {_, O, _}, {_, _, _}}));
-        assertEquals(O, player.currentPlayer(new BoardMarker[][]{{X, _, _}, {_, O, _}, {_, _, X}}));
-        assertEquals(X, player.currentPlayer(new BoardMarker[][]{{X, _, _}, {O, O, _}, {_, _, X}}));
-        assertEquals(O, player.currentPlayer(new BoardMarker[][]{{X, _, _}, {O, O, X}, {_, _, X}}));
-        assertEquals(X, player.currentPlayer(new BoardMarker[][]{{X, _, O}, {O, O, X}, {_, _, X}}));
-        assertEquals(O, player.currentPlayer(new BoardMarker[][]{{X, _, O}, {O, O, X}, {X, _, X}}));
-        assertEquals(X, player.currentPlayer(new BoardMarker[][]{{X, _, O}, {O, O, X}, {X, O, X}}));
-        assertEquals(O, player.currentPlayer(new BoardMarker[][]{{X, X, O}, {O, O, X}, {X, O, X}}));
-    }
-
-    @Test
     public void shouldPerformDeepCopy(){
         BoardMarker[][] arr = new BoardMarker[][]{{_, _, _}, {_, _, _}, {_, _, _}};
         BoardMarker[][] copy = AIPlayer.deep2DArrayCopy(arr);
@@ -80,13 +67,16 @@ public class AIPlayerTest {
         assertArrayEquals(new int[]{0, 2}, player.getMove(new BoardMarker[][]{{O, O, _}, {_, X, _}, {X, X, O}}));
         assertArrayEquals(new int[]{2, 0}, player.getMove(new BoardMarker[][]{{O, X, X}, {_, X, _}, {_, O, O}}));
         assertArrayEquals(new int[]{1, 0}, player.getMove(new BoardMarker[][]{{X, O, O}, {_, X, _}, {X, _, O}}));
+        player = new AIPlayer(O, board);
+        assertArrayEquals(new int[]{0, 2}, player.getMove(new BoardMarker[][]{{X, _, _}, {_, _, _}, {O, X, O}}));
     }
 
     @Test
     public void shouldChooseMoveToForceTie(){
         assertArrayEquals(new int[]{2, 1}, player.getMove(new BoardMarker[][]{{X, O, X}, {_, X, _}, {O, _, O}}));
-        assertArrayEquals(new int[]{2, 0}, player.getMove(new BoardMarker[][]{{X, _, _}, {X, O, O}, {_, _, X}}));
         assertArrayEquals(new int[]{2, 0}, player.getMove(new BoardMarker[][]{{X, X, O}, {_, O, _}, {_, _, _}}));
         assertFalse(Arrays.equals(new int[]{0, 1}, player.getMove(new BoardMarker[][]{{_, _, X}, {_, O, _}, {O, X, _}})));
+        player = new AIPlayer(O, board);
+        assertArrayEquals(new int[]{2, 0}, player.getMove(new BoardMarker[][]{{X, _, _}, {X, O, O}, {_, _, X}}));
     }
 }
