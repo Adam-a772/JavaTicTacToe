@@ -2,7 +2,6 @@ package TicTacToe;
 
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Scanner;
 import static TicTacToe.BoardMarker.*;
 
 public class ConsoleGame {
@@ -10,48 +9,40 @@ public class ConsoleGame {
         InputStreamReader inputStream  = new InputStreamReader(System.in);
         PrintWriter outputStream = new PrintWriter(System.out, true);
         ConsoleIO playerIO = new ConsoleIO(inputStream, outputStream);
-        Scanner inScanner = new Scanner(inputStream);
-        Player player0, player1;
-        boolean playAsX = true;
-        boolean playFirst = true;
+        ConsoleGameIO gameIO = new ConsoleGameIO(inputStream, outputStream);
 
-        outputStream.println("Would you like to play against an AI opponent? (yes or no)");
-        boolean playAI = inScanner.nextLine().matches("^[yY].*");
-        if(playAI){
-            outputStream.println("Would you like to go first? (yes or no)");
-            playFirst = inScanner.nextLine().matches("^[yY].*");
-            outputStream.println("Would you like to be Xs or Os? (X or O)");
-            playAsX = inScanner.nextLine().matches("^[xX].*");
-        } else {
-            outputStream.println("Would you like Xs or Os to move first? (X or O)");
-            playAsX = inScanner.nextLine().matches("^[xX].*");
-        }
+        gameIO.promptForPlayAI();
+        boolean playAI = gameIO.getYesNo();
+        gameIO.promptForPlayFirst();
+        boolean playFirst = gameIO.getYesNo();
+        gameIO.promptForPlayerSymbol();
+        BoardMarker playerSymbol = gameIO.getXorO();
+        gameIO.promptForBoardSize();
+        int boardSize = gameIO.getBoardSize();
 
-        if(playAI && playFirst){
-            player0 = new HumanPlayer((playAsX ? X : O), playerIO);
-            player1 = new AIPlayer((playAsX ? O : X), new TicTacToeBoard());
-        } else if(playAI){
-            player0 = new AIPlayer((playAsX ? O : X), new TicTacToeBoard());
-            player1 = new HumanPlayer((playAsX ? X : O), playerIO);
-        } else {
-            player0 = new HumanPlayer((playAsX ? X : O), playerIO);
-            player1 = new HumanPlayer((playAsX ? O : X), playerIO);
-        }
-
-        Player[] players = new Player[]{player0, player1};
-        Game game = new Game(players, new TicTacToeBoard(), new BoardConsoleIO(outputStream));
+        Player[] players = initializePlayers(playAI, playFirst, playerSymbol, boardSize, playerIO);
+        Game game = new Game(players, new TicTacToeBoard(boardSize, 2), new BoardConsoleIO(outputStream));
 
         BoardMarker winner = game.play();
-        if(winner == T){
-            outputStream.println("It was a tie.");
-        } else if(playAI) {
-            if((playAsX && winner == X) || (!playAsX && winner == O)) {
-                outputStream.println("You won!");
+        gameIO.notifyResult(playAI, playerSymbol, winner);
+    }
+
+    private static Player[] initializePlayers(boolean playAI, boolean playFirst, BoardMarker playerSymbol, int boardSize, ConsoleIO playerIO) {
+        BoardMarker otherPlayerSymbol = (playerSymbol == X) ? O : X;
+        Player player0, player1;
+        if(playAI){
+            if(playFirst){
+                player0 = new HumanPlayer(playerSymbol, playerIO);
+                player1 = new AIPlayer(otherPlayerSymbol, new TicTacToeBoard(boardSize, 2));
             } else {
-                outputStream.println("You lost!");
+                player0 = new AIPlayer(otherPlayerSymbol, new TicTacToeBoard(boardSize, 2));
+                player1 = new HumanPlayer(playerSymbol, playerIO);
             }
         } else {
-            outputStream.println("TicTacToe.Player with " + (winner == X ? "X" : "O") + "s won!");
+            player0 = new HumanPlayer(playFirst ? playerSymbol : otherPlayerSymbol, playerIO);
+            player1 = new HumanPlayer(playFirst ? otherPlayerSymbol : playerSymbol, playerIO);
         }
+
+        return new Player[]{player0, player1};
     }
 }
