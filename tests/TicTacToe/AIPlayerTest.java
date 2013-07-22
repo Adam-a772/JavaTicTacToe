@@ -79,4 +79,22 @@ public class AIPlayerTest {
         player = new AIPlayer(O, board);
         assertArrayEquals(new int[]{2, 0}, player.getMove(new BoardMarker[][]{{X, _, _}, {X, O, O}, {_, _, X}}));
     }
+
+    @Test
+    public void shouldStoreMovesBeforeReturning(){
+        player = new AIPlayer(O, board);
+        BoardMarkerArray testBoardState = new BoardMarkerArray(new BoardMarker[][]{{X, _, _}, {_, _, _}, {_, _, _}});
+        player.getMove(new BoardMarker[][]{{X, _, _}, {_, _, _}, {_, _, _}});
+        assertTrue(player.getCachedMoves().containsKey(testBoardState));
+    }
+
+    @Test
+    public void shouldUseStoredMove(){
+        int[] move = player.getMove(board.getState());
+        int numCachedMoves = player.getCachedMoves().size();
+        board.makeMove(move[0], move[1], X);
+        board.makeMove(1, 1, O);
+        player.getMove(board.getState());
+        assertEquals(numCachedMoves, player.getCachedMoves().size());
+    }
 }

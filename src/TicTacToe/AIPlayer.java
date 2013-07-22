@@ -1,16 +1,19 @@
 package TicTacToe;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.TreeMap;
 import static TicTacToe.BoardMarker.*;
 
 public class AIPlayer implements Player{
     private TicTacToeBoard board;
     private BoardMarker symbol;
+    private HashMap<BoardMarkerArray, int[]> cachedMoves;
 
     public AIPlayer(BoardMarker sym, TicTacToeBoard brd) {
         symbol = sym;
         board = brd;
+        cachedMoves = new HashMap<BoardMarkerArray, int[]>();
     }
 
     @Override
@@ -25,6 +28,12 @@ public class AIPlayer implements Player{
     }
 
     private int[] getMove(BoardMarker[][] boardState, BoardMarker movePlayer) {
+        BoardMarkerArray currentBoardStateArray = new BoardMarkerArray(deep2DArrayCopy(boardState));
+        int[] cachedMove = cachedMoves.get(currentBoardStateArray);
+        if(cachedMove != null){
+            return cachedMove;
+        }
+
         TreeMap<Integer, int[]> possibleMoves = new TreeMap<Integer, int[]>();
         for(int row = 0; row < boardState.length; row++){
             for(int col = 0; col < boardState.length; col++){
@@ -34,11 +43,14 @@ public class AIPlayer implements Player{
                     board.makeMove(row, col, movePlayer);
                     BoardMarker outcome = board.winner();
                     if(outcome == T){//tie
+                        cachedMoves.put(currentBoardStateArray, new int[]{row, col, 0});
                         return new int[]{row, col, 0};
                     } else if(outcome == movePlayer){//a player wins
                         if(movePlayer == symbol){//TicTacToe.AIPlayer wins
+                            cachedMoves.put(currentBoardStateArray, new int[]{row, col, 1});
                             return new int[]{row, col, 1};
                         } else {//other player wins
+                            cachedMoves.put(currentBoardStateArray, new int[]{row, col, -1});
                             return new int[]{row, col, -1};
                         }
                     }
@@ -48,11 +60,14 @@ public class AIPlayer implements Player{
                 }
             }
         }
+        int[] move;
         if(movePlayer == symbol){//want highest outcome
-            return possibleMoves.get(possibleMoves.lastKey());
+            move = possibleMoves.get(possibleMoves.lastKey());
         } else {//want lowest outcome (highest outcome for other player)
-            return possibleMoves.get(possibleMoves.firstKey());
+            move = possibleMoves.get(possibleMoves.firstKey());
         }
+        cachedMoves.put(currentBoardStateArray, move);
+        return move;
     }
 
     public static BoardMarker[][] deep2DArrayCopy(BoardMarker[][] arr){
@@ -61,5 +76,9 @@ public class AIPlayer implements Player{
             copy[i] = Arrays.copyOf(arr[i], arr[i].length);
         }
         return copy;
+    }
+
+    public HashMap<BoardMarkerArray, int[]> getCachedMoves(){
+        return cachedMoves;
     }
 }
