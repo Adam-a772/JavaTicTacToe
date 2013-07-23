@@ -2,7 +2,6 @@ package TicTacToe;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.TreeMap;
 import static TicTacToe.BoardMarker.*;
 
 public class AIPlayer implements Player{
@@ -23,11 +22,11 @@ public class AIPlayer implements Player{
 
     @Override
     public int[] getMove(BoardMarker[][] boardState) {
-        BoardStateValues result = alphaBetaWithMemory(boardState, 1, -1, symbol);
+        BoardStateValues result = alphaBetaWithMemory(boardState, 1, -1, symbol, 8);
         return new int[]{result.getRow(), result.getColumn()};
     }
 
-    private BoardStateValues alphaBetaWithMemory(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer){
+    private BoardStateValues alphaBetaWithMemory(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer, int depth){
         BoardMarkerArray currentBoardStateArray = new BoardMarkerArray(deep2DArrayCopy(boardState));
         int g, next_row, next_col;
         next_row = next_col = -1;
@@ -50,6 +49,8 @@ public class AIPlayer implements Player{
         board.setState(boardState);
         if(board.winner() != _){
             g = evaluate(board.winner());
+        }else if(depth <= 0){
+            g = 0;
         } else if(movePlayer == symbol){
             g = Integer.MIN_VALUE;
             int a = alpha;
@@ -62,7 +63,7 @@ public class AIPlayer implements Player{
                     boardStateCopy[row][col] = movePlayer;
                     BoardMarker nextPlayer = (movePlayer == X) ? O : X;
 
-                    int next_value = alphaBetaWithMemory(boardStateCopy, a, beta, nextPlayer).getValue();
+                    int next_value = alphaBetaWithMemory(boardStateCopy, a, beta, nextPlayer, depth - 1).getValue();
                     if(next_value > g){
                         next_row = row;
                         next_col = col;
@@ -86,7 +87,7 @@ public class AIPlayer implements Player{
                     boardStateCopy[row][col] = movePlayer;
                     BoardMarker nextPlayer = (movePlayer == X) ? O : X;
 
-                    int next_value = alphaBetaWithMemory(boardStateCopy, alpha, b, nextPlayer).getValue();
+                    int next_value = alphaBetaWithMemory(boardStateCopy, alpha, b, nextPlayer, depth - 1).getValue();
                     if(next_value < g){
                         next_row = row;
                         next_col = col;
@@ -122,55 +123,6 @@ public class AIPlayer implements Player{
             return 1;
         else
             return -1;
-    }
-
-    private BoardStateValues getMove(BoardMarker[][] boardState, BoardMarker movePlayer) {
-        BoardMarkerArray currentBoardStateArray = new BoardMarkerArray(deep2DArrayCopy(boardState));
-        BoardStateValues storedBoardStateValues = cachedMoves.get(currentBoardStateArray);
-        if(storedBoardStateValues != null){
-            return storedBoardStateValues;
-        }
-
-        TreeMap<Integer, int[]> possibleMoves = new TreeMap<Integer, int[]>();
-        for(int row = 0; row < boardState.length; row++){
-            for(int col = 0; col < boardState.length; col++){
-                if(boardState[row][col] == _){
-                    BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
-                    board.setState(boardStateCopy);
-                    board.makeMove(row, col, movePlayer);
-                    BoardStateValues boardStateValues = new BoardStateValues(row, col);
-                    BoardMarker outcome = board.winner();
-                    if(outcome == T){//tie
-                        boardStateValues.setValue(0);
-                        cachedMoves.put(currentBoardStateArray, boardStateValues);
-                        return boardStateValues;
-                    } else if(outcome == movePlayer){//a player wins
-                        if(movePlayer == symbol){//TicTacToe.AIPlayer wins
-                            boardStateValues.setValue(1);
-                            cachedMoves.put(currentBoardStateArray, boardStateValues);
-                            return boardStateValues;
-                        } else {//other player wins
-                            boardStateValues.setValue(-1);
-                            cachedMoves.put(currentBoardStateArray, boardStateValues);
-                            return boardStateValues;
-                        }
-                    }
-                    BoardMarker nextPlayer = (movePlayer == X) ? O : X;
-                    int outcomeScore = getMove(boardStateCopy, nextPlayer).getValue();
-                    possibleMoves.put(outcomeScore, new int[]{row, col, outcomeScore});
-                }
-            }
-        }
-        int[] move;
-        if(movePlayer == symbol){//want highest outcome
-            move = possibleMoves.get(possibleMoves.lastKey());
-        } else {//want lowest outcome (highest outcome for other player)
-            move = possibleMoves.get(possibleMoves.firstKey());
-        }
-        BoardStateValues boardStateValues = new BoardStateValues(move[0], move[1]);
-        boardStateValues.setValue(move[2]);
-        cachedMoves.put(currentBoardStateArray, boardStateValues);
-        return boardStateValues;
     }
 
     public static BoardMarker[][] deep2DArrayCopy(BoardMarker[][] arr){
