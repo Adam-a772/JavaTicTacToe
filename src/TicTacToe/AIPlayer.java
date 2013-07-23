@@ -1,7 +1,7 @@
 package TicTacToe;
 
 import java.util.Arrays;
-import java.util.TreeMap;
+
 import static TicTacToe.BoardMarker.*;
 
 public class AIPlayer implements Player{
@@ -20,39 +20,57 @@ public class AIPlayer implements Player{
 
     @Override
     public int[] getMove(BoardMarker[][] boardState) {
-        int[] result = getMove(boardState, symbol);
+        int[] result = minimax(boardState, symbol);
         return new int[]{result[0], result[1]};
     }
 
-    private int[] getMove(BoardMarker[][] boardState, BoardMarker movePlayer) {
-        TreeMap<Integer, int[]> possibleMoves = new TreeMap<Integer, int[]>();
+    private int[] minimax(BoardMarker[][] boardState, BoardMarker movePlayer) {
+        int nextRow, nextCol;
+        nextRow = nextCol = -1;
+        int score = (movePlayer == symbol) ? Integer.MIN_VALUE : Integer.MAX_VALUE;
         for(int row = 0; row < boardState.length; row++){
             for(int col = 0; col < boardState.length; col++){
                 if(boardState[row][col] == _){
                     BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
                     board.setState(boardStateCopy);
                     board.makeMove(row, col, movePlayer);
-                    BoardMarker outcome = board.winner();
-                    if(outcome == T){//tie
-                        return new int[]{row, col, 0};
-                    } else if(outcome == movePlayer){//a player wins
-                        if(movePlayer == symbol){//TicTacToe.AIPlayer wins
-                            return new int[]{row, col, 1};
-                        } else {//other player wins
-                            return new int[]{row, col, -1};
+
+                    if(board.winner() != _)
+                        return new int[]{row, col, evaluateScore(movePlayer)};
+
+                    BoardMarker nextPlayer = (movePlayer == X) ? O : X;
+                    int nextScore = minimax(boardStateCopy, nextPlayer)[2];
+                    if(movePlayer == symbol){
+                        if(nextScore > score){
+                            nextRow = row;
+                            nextCol = col;
+                            score = nextScore;
+                        }
+                    } else {
+                        if(nextScore < score){
+                            nextRow = row;
+                            nextCol = col;
+                            score = nextScore;
                         }
                     }
-                    BoardMarker nextPlayer = (movePlayer == X) ? O : X;
-                    int outcomeScore = getMove(boardStateCopy, nextPlayer)[2];
-                    possibleMoves.put(outcomeScore, new int[]{row, col, outcomeScore});
                 }
             }
         }
-        if(movePlayer == symbol){//want highest outcome
-            return possibleMoves.get(possibleMoves.lastKey());
-        } else {//want lowest outcome (highest outcome for other player)
-            return possibleMoves.get(possibleMoves.firstKey());
+        return new int[]{nextRow, nextCol, score};
+    }
+
+    private int evaluateScore(BoardMarker movePlayer) {
+        BoardMarker winner = board.winner();
+        if(winner == T){//tie
+            return 0;
+        } else if(winner == movePlayer){//a player wins
+            if(movePlayer == symbol){//TicTacToe.AIPlayer wins
+                return 1;
+            } else {//other player wins
+                return -1;
+            }
         }
+        return 0;
     }
 
     public static BoardMarker[][] deep2DArrayCopy(BoardMarker[][] arr){
