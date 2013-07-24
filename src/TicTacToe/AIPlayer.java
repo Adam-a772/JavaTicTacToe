@@ -27,11 +27,34 @@ public class AIPlayer implements Player{
 
     @Override
     public int[] getMove(BoardMarker[][] boardState) {
-        int[] result = AlphaBetaMinimaxWithMemory(boardState, Integer.MIN_VALUE, Integer.MAX_VALUE, symbol);
+        int[] result = mtdf(boardState, 1, symbol);
+        //int[] result = alphaBetaMinimaxWithMemory(boardState, Integer.MIN_VALUE, Integer.MAX_VALUE, symbol);
         return new int[]{result[0], result[1]};
     }
 
-    private int[] AlphaBetaMinimaxWithMemory(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer) {
+    private int[] mtdf(BoardMarker[][] boardState, int startGuess, BoardMarker movePlayer){
+        int[] returnValues = new int[3];
+        int upperbound = Integer.MAX_VALUE;
+        int lowerbound = Integer.MIN_VALUE;
+        int beta;
+        while(upperbound > lowerbound){
+            if(startGuess == lowerbound){
+                beta = startGuess + 1;
+            } else {
+                beta = startGuess;
+            }
+            returnValues = alphaBetaMinimaxWithMemory(boardState, beta - 1, beta, movePlayer);
+            startGuess = returnValues[2];
+            if(startGuess < beta){
+                upperbound = startGuess;
+            } else {
+                lowerbound = startGuess;
+            }
+        }
+        return returnValues;
+    }
+
+    private int[] alphaBetaMinimaxWithMemory(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer) {
         int returnBound = 0;
         boolean leafnode = false;
 
@@ -111,7 +134,7 @@ public class AIPlayer implements Player{
         BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
         boardStateCopy[row][col] = movePlayer;
         BoardMarker nextPlayer = (movePlayer == X) ? O : X;
-        return AlphaBetaMinimaxWithMemory(boardStateCopy, alpha, beta, nextPlayer)[2];
+        return alphaBetaMinimaxWithMemory(boardStateCopy, alpha, beta, nextPlayer)[2];
     }
 
     private int evaluateScore() {
