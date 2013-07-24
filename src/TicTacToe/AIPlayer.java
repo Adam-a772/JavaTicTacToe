@@ -70,8 +70,7 @@ public class AIPlayer implements Player{
             beta  = Math.min(beta, boardStateValues.getUpperbound());
         }
         for(int[] emptyCell : emptyCells(boardState)){
-            int row = emptyCell[0];
-            int col = emptyCell[1];
+            int row = emptyCell[0], col = emptyCell[1];
             BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
             board.setState(boardStateCopy);
             board.makeMove(row, col, movePlayer);
@@ -94,31 +93,27 @@ public class AIPlayer implements Player{
             returnBound = Integer.MIN_VALUE;
             int a = alpha;
             for(int[] emptyCell : emptyCells(boardState)){
-                int row = emptyCell[0];
-                int col = emptyCell[1];
+                int row = emptyCell[0], col = emptyCell[1];
                 returnBound = max(returnBound, getNextScore(boardState, a, beta, movePlayer, depth, row, col));
                 if(returnBound > a){
                     boardStateValues.setRCLU(row, col, returnBound, null);
                     a = returnBound;
                 }
-                if(returnBound >= beta){
+                if(returnBound >= beta)
                     break;
-                }
             }
         } else {
             returnBound = Integer.MAX_VALUE;
             int b = beta;
             for(int[] emptyCell : emptyCells(boardState)){
-                int row = emptyCell[0];
-                int col = emptyCell[1];
+                int row = emptyCell[0], col = emptyCell[1];
                 returnBound = min(returnBound, getNextScore(boardState, alpha, b, movePlayer, depth, row, col));
                 if(returnBound < beta){
                     boardStateValues.setRCLU(row, col, null, returnBound);
                     b = returnBound;
                 }
-                if(returnBound <= alpha){
+                if(returnBound <= alpha)
                     break;
-                }
             }
         }
 
