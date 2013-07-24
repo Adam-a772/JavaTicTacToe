@@ -1,12 +1,11 @@
 package TicTacToe;
 
 public class BoardStateValues {
-    int row, column, value, lowerbound, upperbound;
+    int row, column, lowerbound, upperbound;
 
     public BoardStateValues(int row, int column) {
         this.row = row;
         this.column = column;
-        this.value = 0;
         this.lowerbound = Integer.MIN_VALUE;
         this.upperbound = Integer.MAX_VALUE;
     }
@@ -41,5 +40,16 @@ public class BoardStateValues {
 
     public void setUpperbound(int upperbound) {
         this.upperbound = upperbound;
+    }
+
+    public void setRCLU(Integer row, Integer column, Integer lowerbound, Integer upperbound) {
+        if(row != null)
+            setRow(row);
+        if(column != null)
+            setColumn(column);
+        if(lowerbound != null)
+            setLowerbound(lowerbound);
+        if(upperbound != null)
+            setUpperbound(upperbound);
     }
 }

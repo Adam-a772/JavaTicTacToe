@@ -79,10 +79,7 @@ public class AIPlayer implements Player{
             if(board.winner() != _){
                 leafnode = true;
                 returnBound = evaluateScore();
-                boardStateValues.setRow(row);
-                boardStateValues.setColumn(col);
-                boardStateValues.setLowerbound(returnBound);
-                boardStateValues.setUpperbound(returnBound);
+                boardStateValues.setRCLU(row, col, returnBound, returnBound);
             }
 
             if(leafnode)
@@ -101,9 +98,7 @@ public class AIPlayer implements Player{
                 int col = emptyCell[1];
                 returnBound = max(returnBound, getNextScore(boardState, a, beta, movePlayer, depth, row, col));
                 if(returnBound > a){
-                    boardStateValues.setRow(row);
-                    boardStateValues.setColumn(col);
-                    boardStateValues.setLowerbound(returnBound);
+                    boardStateValues.setRCLU(row, col, returnBound, null);
                     a = returnBound;
                 }
                 if(returnBound >= beta){
@@ -118,9 +113,7 @@ public class AIPlayer implements Player{
                 int col = emptyCell[1];
                 returnBound = min(returnBound, getNextScore(boardState, alpha, b, movePlayer, depth, row, col));
                 if(returnBound < beta){
-                    boardStateValues.setRow(row);
-                    boardStateValues.setColumn(col);
-                    boardStateValues.setUpperbound(returnBound);
+                    boardStateValues.setRCLU(row, col, null, returnBound);
                     b = returnBound;
                 }
                 if(returnBound <= alpha){
