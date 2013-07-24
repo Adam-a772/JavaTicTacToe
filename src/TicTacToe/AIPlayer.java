@@ -27,12 +27,12 @@ public class AIPlayer implements Player{
 
     @Override
     public int[] getMove(BoardMarker[][] boardState) {
-        int[] result = mtdf(boardState, 1, symbol);
-        //int[] result = alphaBetaMinimaxWithMemory(boardState, Integer.MIN_VALUE, Integer.MAX_VALUE, symbol);
+        int[] result = mtdf(boardState, 1, symbol, 9);
+        //int[] result = alphaBetaMinimaxWithMemory(boardState, Integer.MIN_VALUE, Integer.MAX_VALUE, symbol, 9);
         return new int[]{result[0], result[1]};
     }
 
-    private int[] mtdf(BoardMarker[][] boardState, int startGuess, BoardMarker movePlayer){
+    private int[] mtdf(BoardMarker[][] boardState, int startGuess, BoardMarker movePlayer, int depth){
         int[] returnValues = new int[3];
         int upperbound = Integer.MAX_VALUE;
         int lowerbound = Integer.MIN_VALUE;
@@ -43,7 +43,7 @@ public class AIPlayer implements Player{
             } else {
                 beta = startGuess;
             }
-            returnValues = alphaBetaMinimaxWithMemory(boardState, beta - 1, beta, movePlayer);
+            returnValues = alphaBetaMinimaxWithMemory(boardState, beta - 1, beta, movePlayer, depth);
             startGuess = returnValues[2];
             if(startGuess < beta){
                 upperbound = startGuess;
@@ -54,7 +54,7 @@ public class AIPlayer implements Player{
         return returnValues;
     }
 
-    private int[] alphaBetaMinimaxWithMemory(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer) {
+    private int[] alphaBetaMinimaxWithMemory(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer, int depth) {
         int returnBound = 0;
         boolean leafnode = false;
 
@@ -90,13 +90,16 @@ public class AIPlayer implements Player{
         }
         if(leafnode){
             //already dealt with this
+        } else if(depth == 0){
+            board.setState(boardState);
+            returnBound = evaluateScore();
         } else if(movePlayer == symbol){
             returnBound = Integer.MIN_VALUE;
             int a = alpha;
             for(int[] emptyCell : emptyCells(boardState)){
                 int row = emptyCell[0];
                 int col = emptyCell[1];
-                returnBound = max(returnBound, getNextScore(boardState, a, beta, movePlayer, row, col));
+                returnBound = max(returnBound, getNextScore(boardState, a, beta, movePlayer, depth, row, col));
                 if(returnBound > a){
                     boardStateValues.setRow(row);
                     boardStateValues.setColumn(col);
@@ -113,7 +116,7 @@ public class AIPlayer implements Player{
             for(int[] emptyCell : emptyCells(boardState)){
                 int row = emptyCell[0];
                 int col = emptyCell[1];
-                returnBound = min(returnBound, getNextScore(boardState, alpha, b, movePlayer, row, col));
+                returnBound = min(returnBound, getNextScore(boardState, alpha, b, movePlayer, depth, row, col));
                 if(returnBound < beta){
                     boardStateValues.setRow(row);
                     boardStateValues.setColumn(col);
@@ -130,11 +133,11 @@ public class AIPlayer implements Player{
         return new int[]{boardStateValues.getRow(), boardStateValues.getColumn(), returnBound};
     }
 
-    private int getNextScore(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer, int row, int col) {
+    private int getNextScore(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer, int depth, int row, int col) {
         BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
         boardStateCopy[row][col] = movePlayer;
         BoardMarker nextPlayer = (movePlayer == X) ? O : X;
-        return alphaBetaMinimaxWithMemory(boardStateCopy, alpha, beta, nextPlayer)[2];
+        return alphaBetaMinimaxWithMemory(boardStateCopy, alpha, beta, nextPlayer, depth - 1)[2];
     }
 
     private int evaluateScore() {

@@ -43,7 +43,7 @@ public class ConsoleGameIO {
     }
 
     public void promptForBoardSize() {
-        outputStream.println("Would you like to play on a  3x3 or 4x4 board? (3 or 4)");
+        outputStream.println("What size board would you like to play on (ex. 3x3 or 4x4)? (an integer 3 or larger)");
     }
 
     public BoardMarker getXorO() {
@@ -61,7 +61,7 @@ public class ConsoleGameIO {
     public int getBoardSize() {
         try {
             int response = Integer.parseInt(inputStream.nextLine());
-            if(response == 3 || response == 4){
+            if(response >= 3){
                 return response;
             } else {
                 notifyBadResponse();
