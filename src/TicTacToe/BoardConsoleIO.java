@@ -35,6 +35,7 @@ public class BoardConsoleIO implements BoardIO {
     public void printBoard(BoardMarker[][] boardState, BoardMarker zeroSymbol, BoardMarker oneSymbol) {
         int size = boardState.length;
         String horizontalDivider = constructHorizontalDivider(size);
+        outputStream.println("\n\n\n");
         for (int row = 0; row < size; row++) {
             if (row > 0) {
                 outputStream.println(horizontalDivider);
