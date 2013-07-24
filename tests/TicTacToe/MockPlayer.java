@@ -1,7 +1,5 @@
 package TicTacToe;
 
-import TicTacToe.Player;
-
 public class MockPlayer implements Player {
     private int[] nextMove;
     private BoardMarker symbol;

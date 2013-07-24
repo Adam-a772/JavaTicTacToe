@@ -1,6 +1,5 @@
 package TicTacToe;
 
-import TicTacToe.BoardConsoleIO;
 import static TicTacToe.BoardMarker.*;
 import org.junit.Before;
 import org.junit.Test;

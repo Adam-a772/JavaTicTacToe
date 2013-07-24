@@ -1,6 +1,5 @@
 package TicTacToe;
 
-import TicTacToe.ConsoleIO;
 import org.junit.Before;
 import org.junit.Test;
 

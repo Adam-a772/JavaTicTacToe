@@ -1,7 +1,5 @@
 package TicTacToe;
 
-import TicTacToe.BoardIO;
-
 public class MockBoardIO implements BoardIO {
     private int timesPrintedBoard;
 
