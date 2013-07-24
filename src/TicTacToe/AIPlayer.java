@@ -20,11 +20,11 @@ public class AIPlayer implements Player{
 
     @Override
     public int[] getMove(BoardMarker[][] boardState) {
-        int[] result = alphabetaminimax(boardState, Integer.MIN_VALUE, Integer.MAX_VALUE, symbol);
+        int[] result = alphaBetaMinimax(boardState, Integer.MIN_VALUE, Integer.MAX_VALUE, symbol);
         return new int[]{result[0], result[1]};
     }
 
-    private int[] alphabetaminimax(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer) {
+    private int[] alphaBetaMinimax(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer) {
         int nextRow, nextCol;
         nextRow = nextCol = -1;
         for(int[] emptyCell : emptyCells(boardState)){
@@ -74,7 +74,7 @@ public class AIPlayer implements Player{
         BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
         boardStateCopy[row][col] = movePlayer;
         BoardMarker nextPlayer = (movePlayer == X) ? O : X;
-        return alphabetaminimax(boardStateCopy, alpha, beta, nextPlayer)[2];
+        return alphaBetaMinimax(boardStateCopy, alpha, beta, nextPlayer)[2];
     }
 
     private int evaluateScore() {
