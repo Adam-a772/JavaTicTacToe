@@ -2,15 +2,22 @@ package TicTacToe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+
 import static TicTacToe.BoardMarker.*;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 
 public class AIPlayer implements Player{
     private TicTacToeBoard board;
     private BoardMarker symbol;
+    private HashMap<BoardMarkerArray, BoardStateValues> transpositionTable;
 
     public AIPlayer(BoardMarker sym, TicTacToeBoard brd) {
         symbol = sym;
         board = brd;
+        transpositionTable = new HashMap<BoardMarkerArray, BoardStateValues>();
     }
 
     @Override
@@ -20,13 +27,25 @@ public class AIPlayer implements Player{
 
     @Override
     public int[] getMove(BoardMarker[][] boardState) {
-        int[] result = alphabetaminimax(boardState, Integer.MIN_VALUE, Integer.MAX_VALUE, symbol);
+        int[] result = AlphaBetaMinimaxWithMemory(boardState, Integer.MIN_VALUE, Integer.MAX_VALUE, symbol);
         return new int[]{result[0], result[1]};
     }
 
-    private int[] alphabetaminimax(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer) {
-        int nextRow, nextCol;
-        nextRow = nextCol = -1;
+    private int[] AlphaBetaMinimaxWithMemory(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer) {
+        int returnBound = 0;
+        boolean leafnode = false;
+
+        BoardMarkerArray currentStateArray = new BoardMarkerArray(deep2DArrayCopy(boardState));
+        BoardStateValues boardStateValues  = new BoardStateValues(-1, -1);
+        if(transpositionTable.containsKey(currentStateArray)){
+            boardStateValues = transpositionTable.get(currentStateArray);
+            if(boardStateValues.getLowerbound() >= beta)
+                return new int[]{boardStateValues.getRow(), boardStateValues.getColumn(), boardStateValues.getLowerbound()};
+            if(boardStateValues.getUpperbound() <= alpha)
+                return new int[]{boardStateValues.getRow(), boardStateValues.getColumn(), boardStateValues.getUpperbound()};
+            alpha = Math.max(alpha, boardStateValues.getLowerbound());
+            beta  = Math.min(beta, boardStateValues.getUpperbound());
+        }
         for(int[] emptyCell : emptyCells(boardState)){
             int row = emptyCell[0];
             int col = emptyCell[1];
@@ -34,47 +53,65 @@ public class AIPlayer implements Player{
             board.setState(boardStateCopy);
             board.makeMove(row, col, movePlayer);
 
-            if(board.winner() != _)
-                return new int[]{row, col, evaluateScore()};
+            if(board.winner() != _){
+                leafnode = true;
+                returnBound = evaluateScore();
+                boardStateValues.setRow(row);
+                boardStateValues.setColumn(col);
+                boardStateValues.setLowerbound(returnBound);
+                boardStateValues.setUpperbound(returnBound);
+            }
+
+            if(leafnode)
+                break;
         }
-        if(movePlayer == symbol){
+        if(leafnode){
+            //already dealt with this
+        } else if(movePlayer == symbol){
+            returnBound = Integer.MIN_VALUE;
+            int a = alpha;
             for(int[] emptyCell : emptyCells(boardState)){
                 int row = emptyCell[0];
                 int col = emptyCell[1];
-                int nextScore = getNextScore(boardState, alpha, beta, movePlayer, row, col);
-                if(nextScore > alpha){
-                    nextRow = row;
-                    nextCol = col;
-                    alpha = nextScore;
+                returnBound = max(returnBound, getNextScore(boardState, a, beta, movePlayer, row, col));
+                if(returnBound > a){
+                    boardStateValues.setRow(row);
+                    boardStateValues.setColumn(col);
+                    boardStateValues.setLowerbound(returnBound);
+                    a = returnBound;
                 }
-                if(beta <= alpha){
-                    return new int[]{nextRow, nextCol, alpha};
+                if(returnBound >= beta){
+                    break;
                 }
             }
-            return new int[]{nextRow, nextCol, alpha};
         } else {
+            returnBound = Integer.MAX_VALUE;
+            int b = beta;
             for(int[] emptyCell : emptyCells(boardState)){
                 int row = emptyCell[0];
                 int col = emptyCell[1];
-                int nextScore = getNextScore(boardState, alpha, beta, movePlayer, row, col);
-                if(nextScore < beta){
-                    nextRow = row;
-                    nextCol = col;
-                    beta = nextScore;
+                returnBound = min(returnBound, getNextScore(boardState, alpha, b, movePlayer, row, col));
+                if(returnBound < beta){
+                    boardStateValues.setRow(row);
+                    boardStateValues.setColumn(col);
+                    boardStateValues.setUpperbound(returnBound);
+                    b = returnBound;
                 }
-                if(beta <= alpha){
-                    return new int[]{nextRow, nextCol, beta};
+                if(returnBound <= alpha){
+                    break;
                 }
             }
-            return new int[]{nextRow, nextCol, beta};
         }
+
+        transpositionTable.put(currentStateArray, boardStateValues);
+        return new int[]{boardStateValues.getRow(), boardStateValues.getColumn(), returnBound};
     }
 
     private int getNextScore(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer, int row, int col) {
         BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
         boardStateCopy[row][col] = movePlayer;
         BoardMarker nextPlayer = (movePlayer == X) ? O : X;
-        return alphabetaminimax(boardStateCopy, alpha, beta, nextPlayer)[2];
+        return AlphaBetaMinimaxWithMemory(boardStateCopy, alpha, beta, nextPlayer)[2];
     }
 
     private int evaluateScore() {
