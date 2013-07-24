@@ -42,11 +42,7 @@ public class AIPlayer implements Player{
             for(int[] emptyCell : emptyCells(boardState)){
                 int row = emptyCell[0];
                 int col = emptyCell[1];
-                BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
-                board.setState(boardStateCopy);
-                board.makeMove(row, col, movePlayer);
-                BoardMarker nextPlayer = (movePlayer == X) ? O : X;
-                int nextScore = alphabetaminimax(boardStateCopy, alpha, beta, nextPlayer)[2];
+                int nextScore = getNextScore(boardState, alpha, beta, movePlayer, row, col);
                 if(nextScore > alpha){
                     nextRow = row;
                     nextCol = col;
@@ -61,11 +57,7 @@ public class AIPlayer implements Player{
             for(int[] emptyCell : emptyCells(boardState)){
                 int row = emptyCell[0];
                 int col = emptyCell[1];
-                BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
-                board.setState(boardStateCopy);
-                board.makeMove(row, col, movePlayer);
-                BoardMarker nextPlayer = (movePlayer == X) ? O : X;
-                int nextScore = alphabetaminimax(boardStateCopy, alpha, beta, nextPlayer)[2];
+                int nextScore = getNextScore(boardState, alpha, beta, movePlayer, row, col);
                 if(nextScore < beta){
                     nextRow = row;
                     nextCol = col;
@@ -77,6 +69,13 @@ public class AIPlayer implements Player{
             }
             return new int[]{nextRow, nextCol, beta};
         }
+    }
+
+    private int getNextScore(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer, int row, int col) {
+        BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
+        boardStateCopy[row][col] = movePlayer;
+        BoardMarker nextPlayer = (movePlayer == X) ? O : X;
+        return alphabetaminimax(boardStateCopy, alpha, beta, nextPlayer)[2];
     }
 
     private int evaluateScore() {
