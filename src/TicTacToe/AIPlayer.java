@@ -171,4 +171,8 @@ public class AIPlayer implements Player{
         }
         return copy;
     }
+
+    public HashMap<BoardMarkerArray, BoardStateValues> getTranspositionTable() {
+        return transpositionTable;
+    }
 }
