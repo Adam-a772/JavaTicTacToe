@@ -50,8 +50,8 @@ public class AIPlayer implements Player{
                 if(nextScore > alpha){
                     nextRow = row;
                     nextCol = col;
+                    alpha = nextScore;
                 }
-                alpha = Math.max(alpha, nextScore);
                 if(beta <= alpha){
                     return new int[]{nextRow, nextCol, alpha};
                 }
@@ -71,7 +71,6 @@ public class AIPlayer implements Player{
                     nextCol = col;
                     beta = nextScore;
                 }
-                beta = Math.min(beta, nextScore);
                 if(beta <= alpha){
                     return new int[]{nextRow, nextCol, beta};
                 }
