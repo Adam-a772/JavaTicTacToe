@@ -6,6 +6,7 @@ import static TicTacToe.BoardMarker.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
@@ -32,7 +33,7 @@ public class AIPlayerTest {
         int[] move = player.getMove(new BoardMarker[][]{{_, _, _}, {_, _, _}, {_, _, _}});
         int[][] corners = new int[][]{{0, 0}, {0, 2}, {2, 0}, {2, 2}};
         assertTrue(Arrays.equals(move, corners[0]) || Arrays.equals(move, corners[1]) ||
-                   Arrays.equals(move, corners[2]) || Arrays.equals(move, corners[3]));
+                Arrays.equals(move, corners[2]) || Arrays.equals(move, corners[3]));
     }
 
     @Test
@@ -78,5 +79,40 @@ public class AIPlayerTest {
         assertFalse(Arrays.equals(new int[]{0, 1}, player.getMove(new BoardMarker[][]{{_, _, X}, {_, O, _}, {O, X, _}})));
         player = new AIPlayer(O, board);
         assertArrayEquals(new int[]{2, 0}, player.getMove(new BoardMarker[][]{{X, _, _}, {X, O, O}, {_, _, X}}));
+    }
+
+    @Test
+    public void shouldReturnAllRowColForEmptyBoard(){
+        BoardMarker[][] emptyBoard = new BoardMarker[][]{{_, _, _}, {_, _, _}, {_, _, _}};
+        ArrayList<int[]> emptyCells = new ArrayList<int[]>();
+        for(int r = 0; r < emptyBoard.length; r++){
+            for(int c = 0; c < emptyBoard.length; c++){
+                emptyCells.add(new int[]{r, c});
+            }
+        }
+        int[][] expectedEmptyCellsArr = emptyCells.toArray(new int[][]{});
+        int[][] realEmptyCellsArr = AIPlayer.emptyCells(emptyBoard);
+        assertEquals(expectedEmptyCellsArr.length, realEmptyCellsArr.length);
+        for(int i = 0; i < expectedEmptyCellsArr.length; i++){
+            assertArrayEquals(expectedEmptyCellsArr[i], realEmptyCellsArr[i]);
+        }
+    }
+
+    @Test
+    public void shouldReturnOnlyTheEmptyRowCol(){
+        BoardMarker[][] board = new BoardMarker[][]{{X, O, X}, {_, O, _}, {_, X, _}};
+        ArrayList<int[]> emptyCells = new ArrayList<int[]>();
+
+        emptyCells.add(new int[]{1, 0});
+        emptyCells.add(new int[]{1, 2});
+        emptyCells.add(new int[]{2, 0});
+        emptyCells.add(new int[]{2, 2});
+
+        int[][] expectedEmptyCellsArr = emptyCells.toArray(new int[][]{});
+        int[][] realEmptyCellsArr = AIPlayer.emptyCells(board);
+        assertEquals(expectedEmptyCellsArr.length, realEmptyCellsArr.length);
+        for(int i = 0; i < expectedEmptyCellsArr.length; i++){
+            assertArrayEquals(expectedEmptyCellsArr[i], realEmptyCellsArr[i]);
+        }
     }
 }
