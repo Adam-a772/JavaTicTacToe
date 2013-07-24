@@ -15,6 +15,10 @@ public class BoardStateValues {
         return column;
     }
 
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
     public int getLowerbound() {
         return lowerbound;
     }
@@ -27,19 +31,15 @@ public class BoardStateValues {
         return row;
     }
 
+    public void setRow(int row) {
+        this.row = row;
+    }
+
     public int getUpperbound() {
         return upperbound;
     }
 
     public void setUpperbound(int upperbound) {
         this.upperbound = upperbound;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
     }
 }

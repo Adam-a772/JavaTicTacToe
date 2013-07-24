@@ -18,6 +18,12 @@ public class BoardStateValuesTest {
     }
 
     @Test
+    public void testSetColumn(){
+        bsv.setColumn(6);
+        assertEquals(6, bsv.getColumn());
+    }
+
+    @Test
     public void testGetLowerbound() {
         assertEquals(Integer.MIN_VALUE, bsv.getLowerbound());
     }
@@ -34,6 +40,12 @@ public class BoardStateValuesTest {
     }
 
     @Test
+    public void testSetRow(){
+        bsv.setRow(6);
+        assertEquals(6, bsv.getRow());
+    }
+
+    @Test
     public void testGetUpperbound() {
         assertEquals(Integer.MAX_VALUE, bsv.getUpperbound());
     }
@@ -42,16 +54,5 @@ public class BoardStateValuesTest {
     public void testSetUpperbound() {
         bsv.setUpperbound(6);
         assertEquals(6, bsv.getUpperbound());
-    }
-
-    @Test
-    public void testGetValue() {
-        assertEquals(0, bsv.getValue());
-    }
-
-    @Test
-    public void testSetValue() {
-        bsv.setValue(20);
-        assertEquals(20, bsv.getValue());
     }
 }
