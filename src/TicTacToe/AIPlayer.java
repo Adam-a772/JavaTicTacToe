@@ -20,14 +20,13 @@ public class AIPlayer implements Player{
 
     @Override
     public int[] getMove(BoardMarker[][] boardState) {
-        int[] result = minimax(boardState, symbol);
+        int[] result = alphabetaminimax(boardState, Integer.MIN_VALUE, Integer.MAX_VALUE, symbol);
         return new int[]{result[0], result[1]};
     }
 
-    private int[] minimax(BoardMarker[][] boardState, BoardMarker movePlayer) {
+    private int[] alphabetaminimax(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer) {
         int nextRow, nextCol;
         nextRow = nextCol = -1;
-        int score = (movePlayer == symbol) ? Integer.MIN_VALUE : Integer.MAX_VALUE;
         for(int row = 0; row < boardState.length; row++){
             for(int col = 0; col < boardState.length; col++){
                 if(boardState[row][col] == _){
@@ -37,26 +36,52 @@ public class AIPlayer implements Player{
 
                     if(board.winner() != _)
                         return new int[]{row, col, evaluateScore(movePlayer)};
-
-                    BoardMarker nextPlayer = (movePlayer == X) ? O : X;
-                    int nextScore = minimax(boardStateCopy, nextPlayer)[2];
-                    if(movePlayer == symbol){
-                        if(nextScore > score){
+                }
+            }
+        }
+        if(movePlayer == symbol){
+            for(int row = 0; row < boardState.length; row++){
+                for(int col = 0; col < boardState.length; col++){
+                    if(boardState[row][col] == _){
+                        BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
+                        board.setState(boardStateCopy);
+                        board.makeMove(row, col, movePlayer);
+                        BoardMarker nextPlayer = (movePlayer == X) ? O : X;
+                        int nextScore = alphabetaminimax(boardStateCopy, alpha, beta, nextPlayer)[2];
+                        if(nextScore > alpha){
                             nextRow = row;
                             nextCol = col;
-                            score = nextScore;
                         }
-                    } else {
-                        if(nextScore < score){
-                            nextRow = row;
-                            nextCol = col;
-                            score = nextScore;
+                        alpha = Math.max(alpha, nextScore);
+                        if(beta <= alpha){
+                            return new int[]{nextRow, nextCol, alpha};
                         }
                     }
                 }
             }
+            return new int[]{nextRow, nextCol, alpha};
+        } else {
+            for(int row = 0; row < boardState.length; row++){
+                for(int col = 0; col < boardState.length; col++){
+                    if(boardState[row][col] == _){
+                        BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
+                        board.setState(boardStateCopy);
+                        board.makeMove(row, col, movePlayer);
+                        BoardMarker nextPlayer = (movePlayer == X) ? O : X;
+                        int nextScore = alphabetaminimax(boardStateCopy, alpha, beta, nextPlayer)[2];
+                        if(nextScore < beta){
+                            nextRow = row;
+                            nextCol = col;
+                        }
+                        beta = Math.min(beta, nextScore);
+                        if(beta <= alpha){
+                            return new int[]{nextRow, nextCol, beta};
+                        }
+                    }
+                }
+            }
+            return new int[]{nextRow, nextCol, beta};
         }
-        return new int[]{nextRow, nextCol, score};
     }
 
     private int evaluateScore(BoardMarker movePlayer) {
