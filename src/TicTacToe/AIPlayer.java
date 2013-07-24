@@ -27,8 +27,8 @@ public class AIPlayer implements Player{
 
     @Override
     public int[] getMove(BoardMarker[][] boardState) {
-        int[] result = mtdf(boardState, 1, symbol, 9);
-        //int[] result = alphaBetaMinimaxWithMemory(boardState, Integer.MIN_VALUE, Integer.MAX_VALUE, symbol, 9);
+        int depth = max(2, 12 - (int) Math.sqrt(emptyCells(boardState).length));
+        int[] result = mtdf(boardState, 1, symbol, depth);
         return new int[]{result[0], result[1]};
     }
 
