@@ -2,7 +2,6 @@ package TicTacToe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import static TicTacToe.BoardMarker.*;
 
 public class AIPlayer implements Player{

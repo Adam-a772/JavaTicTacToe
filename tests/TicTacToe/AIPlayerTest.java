@@ -1,7 +1,5 @@
 package TicTacToe;
 
-import TicTacToe.AIPlayer;
-import TicTacToe.TicTacToeBoard;
 import static TicTacToe.BoardMarker.*;
 import org.junit.Before;
 import org.junit.Test;
