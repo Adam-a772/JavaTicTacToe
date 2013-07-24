@@ -81,7 +81,7 @@ public class BoardConsoleIOTest {
                             "   |   |   \n" +
                             "  6|  7|  8\n";
         io.printBoard(new BoardMarker[][]{{_, _, _}, {_, _, _}, {_, _, _}}, X, O);
-        assertEquals(emptyBoard, ioOutput.toString());
+        assertEquals("\n\n\n\n" + emptyBoard, ioOutput.toString());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class BoardConsoleIOTest {
                             "   |   |   |   \n" +
                             " 12| 13| 14| 15\n";
         io.printBoard(new BoardMarker[][]{{_, _, _, _}, {_, _, _, _}, {_, _, _, _}, {_, _, _, _}}, X, O);
-        assertEquals(emptyBoard, ioOutput.toString());
+        assertEquals("\n\n\n\n" + emptyBoard, ioOutput.toString());
     }
 
     @Test
@@ -150,6 +150,6 @@ public class BoardConsoleIOTest {
                        "| || x | x || |\n" +
                        "\\-/|/ \\|/ \\|\\-/\n";
         io.printBoard(new BoardMarker[][]{{X, O, O, O}, {X, X, O, O}, {X, X, O, X}, {O, X, X, O}}, X, O);
-        assertEquals(board, ioOutput.toString());
+        assertEquals("\n\n\n\n" + board, ioOutput.toString());
     }
 }
