@@ -18,19 +18,14 @@ public class AIPlayer implements Player{
     }
 
     @Override
-    public BoardMarker getSymbol() {
-        return symbol;
-    }
-
-    @Override
     public int[] getMove(BoardMarker[][] boardState) {
         int[] result = alphaBetaMinimax(boardState, Integer.MIN_VALUE, Integer.MAX_VALUE, symbol);
         return new int[]{result[0], result[1]};
     }
 
     private int[] alphaBetaMinimax(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer) {
-        BoardMarkerArray currentBoardArray = new BoardMarkerArray(boardState);
         int[] move;
+        BoardMarkerArray currentBoardArray = new BoardMarkerArray(boardState);
         if((move = cachedMoves.get(currentBoardArray)) != null){
             return move;
         } else if((move = getGameEndingMove(boardState, movePlayer)) != null) {
@@ -57,8 +52,7 @@ public class AIPlayer implements Player{
     }
 
     private int[] getMaxMove(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer){
-        int nextRow, nextCol;
-        nextRow = nextCol = -1;
+        int nextRow = -1, nextCol = -1;
         for(int[] emptyCell : emptyCells(boardState)){
             int row = emptyCell[0], col = emptyCell[1];
             int nextScore = getNextScore(boardState, alpha, beta, movePlayer, row, col);
@@ -68,14 +62,13 @@ public class AIPlayer implements Player{
                 alpha = nextScore;
             }
             if(beta <= alpha)
-                return new int[]{nextRow, nextCol, alpha};
+                break;
         }
         return new int[]{nextRow, nextCol, alpha};
     }
 
     private int[] getMinMove(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer){
-        int nextRow, nextCol;
-        nextRow = nextCol = -1;
+        int nextRow = -1, nextCol = -1;
         for(int[] emptyCell : emptyCells(boardState)){
             int row = emptyCell[0], col = emptyCell[1];
             int nextScore = getNextScore(boardState, alpha, beta, movePlayer, row, col);
@@ -85,7 +78,7 @@ public class AIPlayer implements Player{
                 beta = nextScore;
             }
             if(beta <= alpha)
-                return new int[]{nextRow, nextCol, beta};
+                break;
         }
         return new int[]{nextRow, nextCol, beta};
     }
@@ -127,6 +120,11 @@ public class AIPlayer implements Player{
             copy[i] = Arrays.copyOf(arr[i], arr[i].length);
         }
         return copy;
+    }
+
+    @Override
+    public BoardMarker getSymbol() {
+        return symbol;
     }
 
     public HashMap<BoardMarkerArray, int[]> getCachedMoves() {
