@@ -28,7 +28,6 @@ public class AIPlayer implements Player{
         BoardMarkerArray currentBoardArray = new BoardMarkerArray(boardState);
         if((move = cachedMoves.get(currentBoardArray)) != null){
             return move;
-        } else if((move = getGameEndingMove(boardState, movePlayer)) != null) {
         } else if(movePlayer == symbol){
             move = getMaxMove(boardState, alpha, beta, movePlayer);
         } else {
@@ -38,17 +37,16 @@ public class AIPlayer implements Player{
         return move;
     }
 
-    private int[] getGameEndingMove(BoardMarker[][] boardState, BoardMarker movePlayer){
-        for(int[] emptyCell : emptyCells(boardState)){
-            int row = emptyCell[0], col = emptyCell[1];
-            BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
-            board.setState(boardStateCopy);
-            board.makeMove(row, col, movePlayer);
-
-            if(board.winner() != _)
-                return new int[]{row, col, evaluateScore()};
+    private int getNextScore(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer, int row, int col) {
+        BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
+        board.setState(boardStateCopy);
+        board.makeMove(row, col, movePlayer);
+        if(board.winner() != _)
+            return  evaluateScore();
+        else {
+            BoardMarker nextPlayer = (movePlayer == X) ? O : X;
+            return alphaBetaMinimax(boardStateCopy, alpha, beta, nextPlayer)[2];
         }
-        return null;
     }
 
     private int[] getMaxMove(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer){
@@ -81,13 +79,6 @@ public class AIPlayer implements Player{
                 break;
         }
         return new int[]{nextRow, nextCol, beta};
-    }
-
-    private int getNextScore(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer, int row, int col) {
-        BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
-        boardStateCopy[row][col] = movePlayer;
-        BoardMarker nextPlayer = (movePlayer == X) ? O : X;
-        return alphaBetaMinimax(boardStateCopy, alpha, beta, nextPlayer)[2];
     }
 
     private int evaluateScore() {
