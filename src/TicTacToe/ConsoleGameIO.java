@@ -61,7 +61,7 @@ public class ConsoleGameIO {
     public int getBoardSize() {
         try {
             int response = Integer.parseInt(inputStream.nextLine());
-            if(response >= 3){
+            if(response == 3 || response == 4){
                 return response;
             } else {
                 notifyBadResponse();

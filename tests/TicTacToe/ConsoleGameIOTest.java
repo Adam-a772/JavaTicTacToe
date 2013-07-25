@@ -143,6 +143,15 @@ public class ConsoleGameIOTest {
     }
 
     @Test
+    public void shouldNotAllowBoardsLargerThan4x4(){
+        initialize("bad\n5\n4");
+        io.getBoardSize();
+        Scanner responseScanner = new Scanner(outputWriter.toString());
+        assertTrue(responseScanner.nextLine().matches(".*not.*valid.*"));
+        assertTrue(responseScanner.nextLine().matches(".*not.*valid.*"));
+    }
+
+    @Test
     public void shouldNotifyTie(){
         io.notifyResult(false, X, T);
         assertTrue(outputWriter.toString().trim().matches(".*a tie.*"));
