@@ -149,4 +149,28 @@ public class AIPlayerTest {
 
         assertEquals(cachedMovesString, player.getCachedMoves().toString());
     }
+
+    @Test
+    public void shouldEvaluateNullForUnfinishedGame(){
+        assertEquals(null, player.evaluateScore(new BoardMarker[][]{{X, X, O}, {O, O, X}, {X, _, O}}));
+    }
+
+    @Test
+    public void shouldEvaluate0ForTieGame(){
+        assertEquals(0, player.evaluateScore(new BoardMarker[][]{{X, X, O}, {O, O, X}, {X, X, O}}).intValue());
+    }
+
+    @Test
+    public void shouldEvaluate1ForWin(){
+        assertEquals(1, player.evaluateScore(new BoardMarker[][]{{X, X, X}, {O, O, _}, {X, _, O}}).intValue());
+        player = new AIPlayer(O, board);
+        assertEquals(1, player.evaluateScore(new BoardMarker[][]{{O, O, O}, {X, X, _}, {O, _, X}}).intValue());
+    }
+
+    @Test
+    public void shouldEvaluateNeg1ForLoss(){
+        assertEquals(-1, player.evaluateScore(new BoardMarker[][]{{O, O, O}, {X, X, _}, {O, _, X}}).intValue());
+        player = new AIPlayer(O, board);
+        assertEquals(-1, player.evaluateScore(new BoardMarker[][]{{X, X, X}, {O, O, _}, {X, _, O}}).intValue());
+    }
 }

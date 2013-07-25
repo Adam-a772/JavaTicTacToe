@@ -39,14 +39,17 @@ public class AIPlayer implements Player{
 
     private int getNextScore(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer, int row, int col) {
         BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
-        board.setState(boardStateCopy);
-        board.makeMove(row, col, movePlayer);
-        if(board.winner() != _)
-            return  evaluateScore();
+        boardStateCopy[row][col] = movePlayer;
+        int score;
+        Integer nullableScore;
+
+        if((nullableScore = evaluateScore(boardStateCopy)) != null)
+            score = nullableScore.intValue();
         else {
             BoardMarker nextPlayer = (movePlayer == X) ? O : X;
-            return alphaBetaMinimax(boardStateCopy, alpha, beta, nextPlayer)[2];
+            score =  alphaBetaMinimax(boardStateCopy, alpha, beta, nextPlayer)[2];
         }
+        return score;
     }
 
     private int[] getMaxMove(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer){
@@ -81,9 +84,12 @@ public class AIPlayer implements Player{
         return new int[]{nextRow, nextCol, beta};
     }
 
-    private int evaluateScore() {
+    public Integer evaluateScore(BoardMarker[][] boardState) {
+        board.setState(boardState);
         BoardMarker winner = board.winner();
-        if(winner == T){//tie
+        if(winner == _){
+            return null;
+        } else if(winner == T){//tie
             return 0;
         } else if(winner == symbol){//AI player wins
             return 1;
