@@ -25,11 +25,19 @@ public class AIPlayer implements Player{
     }
 
     private int[] alphaBetaMinimax(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer) {
-        int nextRow, nextCol;
-        nextRow = nextCol = -1;
+        int[] winningMove = getWinningMove(boardState, movePlayer);
+        if(winningMove != null) {
+            return winningMove;
+        } else if(movePlayer == symbol){
+            return getMaxMove(boardState, alpha, beta, movePlayer);
+        } else {
+            return getMinMove(boardState, alpha, beta, movePlayer);
+        }
+    }
+
+    private int[] getWinningMove(BoardMarker[][] boardState, BoardMarker movePlayer){
         for(int[] emptyCell : emptyCells(boardState)){
-            int row = emptyCell[0];
-            int col = emptyCell[1];
+            int row = emptyCell[0], col = emptyCell[1];
             BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
             board.setState(boardStateCopy);
             board.makeMove(row, col, movePlayer);
@@ -37,37 +45,41 @@ public class AIPlayer implements Player{
             if(board.winner() != _)
                 return new int[]{row, col, evaluateScore()};
         }
-        if(movePlayer == symbol){
-            for(int[] emptyCell : emptyCells(boardState)){
-                int row = emptyCell[0];
-                int col = emptyCell[1];
-                int nextScore = getNextScore(boardState, alpha, beta, movePlayer, row, col);
-                if(nextScore > alpha){
-                    nextRow = row;
-                    nextCol = col;
-                    alpha = nextScore;
-                }
-                if(beta <= alpha){
-                    return new int[]{nextRow, nextCol, alpha};
-                }
+        return null;
+    }
+
+    private int[] getMaxMove(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer){
+        int nextRow, nextCol;
+        nextRow = nextCol = -1;
+        for(int[] emptyCell : emptyCells(boardState)){
+            int row = emptyCell[0], col = emptyCell[1];
+            int nextScore = getNextScore(boardState, alpha, beta, movePlayer, row, col);
+            if(nextScore > alpha){
+                nextRow = row;
+                nextCol = col;
+                alpha = nextScore;
             }
-            return new int[]{nextRow, nextCol, alpha};
-        } else {
-            for(int[] emptyCell : emptyCells(boardState)){
-                int row = emptyCell[0];
-                int col = emptyCell[1];
-                int nextScore = getNextScore(boardState, alpha, beta, movePlayer, row, col);
-                if(nextScore < beta){
-                    nextRow = row;
-                    nextCol = col;
-                    beta = nextScore;
-                }
-                if(beta <= alpha){
-                    return new int[]{nextRow, nextCol, beta};
-                }
-            }
-            return new int[]{nextRow, nextCol, beta};
+            if(beta <= alpha)
+                return new int[]{nextRow, nextCol, alpha};
         }
+        return new int[]{nextRow, nextCol, alpha};
+    }
+
+    private int[] getMinMove(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer){
+        int nextRow, nextCol;
+        nextRow = nextCol = -1;
+        for(int[] emptyCell : emptyCells(boardState)){
+            int row = emptyCell[0], col = emptyCell[1];
+            int nextScore = getNextScore(boardState, alpha, beta, movePlayer, row, col);
+            if(nextScore < beta){
+                nextRow = row;
+                nextCol = col;
+                beta = nextScore;
+            }
+            if(beta <= alpha)
+                return new int[]{nextRow, nextCol, beta};
+        }
+        return new int[]{nextRow, nextCol, beta};
     }
 
     private int getNextScore(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer, int row, int col) {
