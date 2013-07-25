@@ -113,4 +113,40 @@ public class AIPlayerTest {
             assertArrayEquals(expectedEmptyCellsArr[i], realEmptyCellsArr[i]);
         }
     }
+
+    @Test
+    public void shouldStartWithNoCachedMoves(){
+        assertEquals(0, player.getCachedMoves().size());
+    }
+
+    @Test
+    public void shouldCacheMovesBeforeMakingThem(){
+        player = new AIPlayer(O, board);
+        BoardMarker[][] boardState = new BoardMarker[][]{{X, _, _}, {_, _, _}, {_, _, _}};
+        BoardMarkerArray boardStateArray = new BoardMarkerArray(boardState);
+
+        player.getMove(boardState);
+        assertTrue(player.getCachedMoves().containsKey(boardStateArray));
+    }
+
+    @Test
+    public void shouldExamineWholeGame(){
+        player.getMove(board.getState());
+
+        BoardMarkerArray tiedArray1 = new BoardMarkerArray(new BoardMarker[][]{{X, X, O}, {O, O, X}, {X, _, O}});
+        BoardMarkerArray tiedArray2 = new BoardMarkerArray(new BoardMarker[][]{{X, X, O}, {O, O, X}, {X, O, _}});
+
+        assertTrue(player.getCachedMoves().containsKey(tiedArray1));
+        assertTrue(player.getCachedMoves().containsKey(tiedArray2));
+    }
+
+    @Test
+    public void shouldNotModifyCachedMovesIfMoveIsAlreadyCached(){
+        player.getMove(board.getState());
+        String cachedMovesString = player.getCachedMoves().toString();
+
+        player.getMove(new BoardMarker[][]{{X, _, _}, {_, O, _}, {_, _, _}});
+
+        assertEquals(cachedMovesString, player.getCachedMoves().toString());
+    }
 }

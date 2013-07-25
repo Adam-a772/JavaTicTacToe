@@ -2,15 +2,19 @@ package TicTacToe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+
 import static TicTacToe.BoardMarker.*;
 
 public class AIPlayer implements Player{
     private TicTacToeBoard board;
     private BoardMarker symbol;
+    private HashMap<BoardMarkerArray, int[]> cachedMoves;
 
     public AIPlayer(BoardMarker sym, TicTacToeBoard brd) {
         symbol = sym;
         board = brd;
+        cachedMoves = new HashMap<BoardMarkerArray, int[]>();
     }
 
     @Override
@@ -25,17 +29,21 @@ public class AIPlayer implements Player{
     }
 
     private int[] alphaBetaMinimax(BoardMarker[][] boardState, int alpha, int beta, BoardMarker movePlayer) {
-        int[] winningMove = getWinningMove(boardState, movePlayer);
-        if(winningMove != null) {
-            return winningMove;
+        BoardMarkerArray currentBoardArray = new BoardMarkerArray(boardState);
+        int[] move;
+        if((move = cachedMoves.get(currentBoardArray)) != null){
+            return move;
+        } else if((move = getGameEndingMove(boardState, movePlayer)) != null) {
         } else if(movePlayer == symbol){
-            return getMaxMove(boardState, alpha, beta, movePlayer);
+            move = getMaxMove(boardState, alpha, beta, movePlayer);
         } else {
-            return getMinMove(boardState, alpha, beta, movePlayer);
+            move = getMinMove(boardState, alpha, beta, movePlayer);
         }
+        cachedMoves.put(currentBoardArray, move);
+        return move;
     }
 
-    private int[] getWinningMove(BoardMarker[][] boardState, BoardMarker movePlayer){
+    private int[] getGameEndingMove(BoardMarker[][] boardState, BoardMarker movePlayer){
         for(int[] emptyCell : emptyCells(boardState)){
             int row = emptyCell[0], col = emptyCell[1];
             BoardMarker[][] boardStateCopy = deep2DArrayCopy(boardState);
@@ -119,5 +127,9 @@ public class AIPlayer implements Player{
             copy[i] = Arrays.copyOf(arr[i], arr[i].length);
         }
         return copy;
+    }
+
+    public HashMap<BoardMarkerArray, int[]> getCachedMoves() {
+        return cachedMoves;
     }
 }
